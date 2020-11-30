@@ -430,3 +430,35 @@ public class Code2 {
     }
 }
 
+    
+    //由题意知任意两块蛋糕的欧几里得距离不能等于2，也即有两组关系：
+// （1）x1 - x2 = 2(或-2)，y1 - y2 = 0；
+// （2）y1 - y2 = 2(或-2)，x1 - x2 = 0；
+// 可理解为若开始放蛋糕的位置为（x,y）；则对于每一行来说（x + 2, y）处不能放蛋糕；
+// 对于每一列来说（x, y + 2）处不能放蛋糕。
+public class Code1 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int w = input.nextInt();
+        int h = input.nextInt();
+        //创建的未初始化的二维数组，则其值默认为0；
+        //将不能放蛋糕的地方置为1，最后剩几个0就意味着可以放几块蛋糕
+        int[][] arr = new int[w][h];
+        int count = 0;
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (arr[i][j] == 0) {
+                    count++;
+                    //每一行不能放蛋糕的地方
+                    if ((i + 2) < w) {
+                        arr[i + 2][j] = 1;
+                    }
+                    //每一列不能放蛋糕的位置
+                    if ((j + 2) < h) {
+                        arr[i][j + 2] = 1;
+                    }
+                }
+            }
+        }
+        System.out.println(count);//这个2*2的盒子最多放4个也能跑
+    }
