@@ -872,3 +872,37 @@ public class Code2 {
             }
         }
     }
+
+
+    //方法二：单指针
+    // 思路与算法
+    // 我们可以考虑对数组进行两次遍历。在第一次遍历中，我们将数组中所有的 0 交换到数组的头部。
+    // 在第二次遍历中，我们将数组中所有的 1 交换到头部的 0 之后。此时，所有的 2 都出现在数组的尾部，这样我们就完成了排序。
+    //
+    public static void sortColors1(int[] nums) {
+        int n = nums.length;
+        int p = 0;//指针
+
+        //我们将数组中所有的 0 交换到数组的头部。
+        for (int i = 0; i < n;i++) {
+            if (nums[i] == 0) {
+                int temp = nums[i];
+                nums[i] = nums[p];
+                nums[p] = temp;
+                p++;
+            }
+        }//这个for循环走完之后，p指针前面的数组内元素已经全变成0了，下个循环直接从p指针开始交换就行
+
+
+        //将数组中所有的 1 交换到头部的 0 之后。此时，所有的 2 都出现在数组的尾部，这样我们就完成了排序
+        for (int j = p;j < n;j++) {
+            if (nums[j] == 1){
+            int temp = nums[j];
+            nums[j] = nums[p];
+            nums[p] = temp;
+            p++;
+           }
+         }
+    }
+
+}
