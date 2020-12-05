@@ -815,3 +815,60 @@ public class Code2 {
 }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+
+此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+
+输入：nums = [2,0,2,1,1,0]
+输出：[0,0,1,1,2,2]
+输入：nums = [2,0,1]
+输出：[0,1,2]
+输入：nums = [0]
+输出：[0]
+输入：nums = [1]
+输出：[1]
+
+ */
+
+    public class SortColor {
+
+    //方法一：先计算出个数字出现的次数，然后在按0,1,2的顺序给数组重新赋值
+    public static void main(String[] args) {
+        int[] a = {2,0,2,1,1,0};
+        System.out.println(Arrays.toString(a));
+        sortColors1(a);
+        System.out.println(Arrays.toString(a));
+    }
+    public static void sortColors(int[] nums) {
+        // 记录0,1,2的个数
+        int num0 = 0, num1 = 0, num2 = 0;
+        // 计算各个数字出现的次数
+        for (int i : nums) {
+            switch(i) {
+                case 0:
+                    num0++;
+                    break;
+                case 1:
+                    num1++;
+                    break;
+                case 2:
+                    num2++;
+                    break;
+            }
+        }
+        System.out.println(num0);
+        System.out.println(num1);
+        System.out.println(num2);
+        // 重新赋值
+        for (int i = 0; i < nums.length; i++) {
+            if (i < num0) {
+                nums[i] = 0;
+            } else if (i < num0+num1) {
+                nums[i] = 1;
+            } else {
+                nums[i] = 2;
+            }
+        }
+    }
