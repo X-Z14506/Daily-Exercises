@@ -906,3 +906,88 @@ public class Code2 {
     }
 
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    //冒泡排序
+public class Main {
+    public static void main(String[] args) {
+        int[] arr = {45,554,54,52,47,49,7,5};
+        System.out.println("==================排序前==================");
+        print(arr);
+
+        bubblesort(arr);
+
+        System.out.println("==================排序后===================");
+        print(arr);
+    }
+   
+    /*
+    
+    排序结果：
+    ==================排序前==================
+    45 554 54 52 47 49 7 5 
+    第1趟：45 54 52 47 49 7 5 554 
+    第2趟：45 52 47 49 7 5 54 554 
+    第3趟：45 47 49 7 5 52 54 554 
+    第4趟：45 47 7 5 49 52 54 554 
+    第5趟：45 7 5 47 49 52 54 554 
+    第6趟：7 5 45 47 49 52 54 554 
+    第7趟：5 7 45 47 49 52 54 554 
+    ==================排序后===================
+    5 7 45 47 49 52 54 554 
+
+ */
+
+    private static void bubblesort(int[] arr) {
+        //如果为空数组或者数组元素只有一个，无需排序
+        if (arr == null || arr.length == 1) {
+            return;
+        }
+
+        //外层循环表示趟数
+        for (int i = 0 ; i < arr.length-1;i++) {
+
+            //每一趟进来都默认有序，如果交换说明无序
+            boolean isSorted = true;
+
+            //j表示要比较的元素对的第一个元素，i为几说明最后几个元素已经排序好，
+            // 因此判断要减去i，无需再对已经排序好的元素进行重复比较
+            for (int j = 0;j<arr.length-1-i;j++) {
+                if (arr[j] > arr[j+1]) {
+                    swap(arr,j,j+1);
+                    isSorted = false;
+                }
+            }
+            //如果走到这里，说明结束了第i趟排序，但是未发生交换，则说明已经有序，
+            // 不用在进行下一趟结束趟数的循环
+            if (isSorted) {
+                break;
+            }
+
+            //把每一趟排序都打印一遍
+            System.out.print("第"+(i+1)+"趟：");
+            print(arr);
+        }
+    }
+
+    //交换
+    private static void swap(int[]arr,int i,int j) {
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+    }
+    // 打印数组
+    public static void print(int[] arr) {
+        if (arr == null) {
+            return;
+        }
+
+        for(int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+
+
+}
