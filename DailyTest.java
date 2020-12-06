@@ -1091,3 +1091,34 @@ public class Code2 {
         }
     }
     
+    //   暴力解法一：
+     public static String[] getGray(int n) {
+        if (n==1) {
+            return new String[]{"0","1"};
+        }else {
+            //要求第n个格雷码，先求出第n-1个格雷码
+            String[] preArr = getGray(n-1);
+
+            //当前保存格雷码数组的长度为上一个格雷码数组长度的2倍
+            String[] curArr = new String[preArr.length * 2];
+
+            //前面一半第一个数字前加上0
+            for (int i = 0 ;i < preArr.length;i++) {
+                curArr[i] = "0" + preArr[i];
+            }
+
+            //先将preArr逆序一遍
+            String[] newArr = new String[preArr.length];
+            for (int i= 0 ; i < preArr.length ;i++) {
+                newArr[i] = preArr[preArr.length-1-i];
+            }
+            //后面一半的第一个数字前面加上1
+            int j = 0;
+            for (int i = preArr.length;i < curArr.length;i++) {
+                curArr[i] = "1" + newArr[j++];
+            }
+           return curArr;
+        }
+  }
+
+   
