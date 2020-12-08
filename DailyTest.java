@@ -1447,3 +1447,40 @@ public class Main2 {
         System.out.println(sb.toString());//n=6时：31+33+35+37+39+41
     }
 
+   //方法2：
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            int n = scanner.nextInt();
+            StringBuffer sb = new StringBuffer();
+            int mid = n * n;
+            if (mid % 2 == 1) {
+                int count = (n - 1) / 2;
+                for (int i = count; i >= 0; i--) {
+                    sb.append(mid - i * 2);
+                    sb.append("+");
+                }
+                for (int i = 1; i < count; i++) {
+                    sb.append(mid + i * 2);
+                    sb.append("+");
+                }
+                sb.append(mid + count * 2);
+            }
+            else {
+                int count = n / 2;
+                for (int i = count - 1; i >= 0; i--) {
+                    sb.append(mid - i * 2 - 1);
+                    sb.append("+");
+                }
+                for (int i = 0; i < count - 1; i++) {
+                    sb.append(mid + i * 2 + 1);
+                    sb.append("+");
+                }
+                sb.append(mid + (count - 1) * 2 + 1);
+            }
+            System.out.println(String.valueOf(sb));
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
