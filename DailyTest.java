@@ -1,6 +1,205 @@
 
 
 
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+平衡二叉树
+
+现一个函数，检查二叉树是否平衡，平衡二叉树的定义如下，对于树中的任意 一个结点，
+其两颗子树的高度差不超过1。
+给定指向树根结点的指针TreeNode* root，请返回一个bool，代表这棵树是否平衡。
+ */
+public class Main01 {
+    public static void main(String[] args) {
+
+    }
+    //判断是不是平衡二叉树
+    public boolean isBalance(TreeNode root) {
+        if (root==null) {
+            return true;
+        }
+        //左子树高度
+        int left = getHeight(root.left);
+        //右子树高度
+        int right = getHeight(root.right);
+        //如果左右子树高度相差<=1，说明为平衡树，接着判断左右子树是否为平衡树
+        if (Math.abs(left-right) <= 1) {
+            return isBalance(root.left) && isBalance(root.right);
+        }else {
+            //若左右子树高度相差>1,或者左右子树的高度相差>1，说明不是平衡树
+            return false;
+        }
+
+    }
+
+    //计算二叉树的高度
+    private int getHeight(TreeNode root) {
+        if (root==null) {
+            return 0;
+        }
+        //计算左子树的高度
+        int leftHeight = getHeight(root.left);
+        //计算右子树的高度
+        int rightHeight = getHeight(root.right);
+        return Math.max(leftHeight,rightHeight)+1;
+    }
+}
+class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+链式A+B（牛客）
+ */
+public class Main02 {
+    public ListNode plusAB(ListNode a, ListNode b) {
+         if (a==null) {
+             return b;
+         }
+         if (b==null) {
+             return a;
+         }
+         ListNode head = new ListNode(-1);
+         ListNode cur = head;
+         ListNode p1 = a;
+         ListNode p2 = b;
+         int sum = 0;
+         while (p1 != null || p2 != null || sum!=0) {
+             if (p1!=null) {
+                 sum+=p1.val;
+                 p1 = p1.next;
+             }
+             if (p2!=null) {
+                 sum+=p2.val;
+                 p2 = p2.next;
+             }
+             cur.next = new ListNode(sum%10);
+             sum = sum/10;
+             cur = cur.next;
+         }
+         return head.next;
+    }
+}
+
+class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+最难的问题（牛客）
+ */
+    public class Main02 {
+        public static void main(String[] args) {
+            Scanner scanner = new Scanner(System.in);
+            while (scanner.hasNext()) {
+                String s = scanner.nextLine();
+                char[] chars = s.toCharArray();
+                for (int i = 0;i < chars.length;i++) {
+                    if ('A' <= chars[i]) {
+                        chars[i] = (char) ('E' < chars[i] ? (chars[i]-5) : (chars[i]+21));
+                    }
+                }
+                System.out.println(new String(chars));
+            }
+        }
+    }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+统计每个月兔子的总数(牛客)
+ */
+public class Main01 {
+    public static void main1(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int month = Integer.parseInt(reader.readLine());
+        int totalCount = getTotalCount(month);
+        System.out.println(totalCount);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int month = sc.nextInt();
+            int totalCount = getTotalCount(month);
+            System.out.println(totalCount);
+        }
+
+
+    }
+    public static int getTotalCount(int monthCount) {
+        if (monthCount < 3){
+            return 1;
+        }else {
+           return getTotalCount(monthCount-1)+getTotalCount(monthCount-2);
+        }
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+
+给定一个string数组p及其大小n，同时给定长字符串string s，请返回一个bool数组，
+元素为true或false对应p中的对应字符串是否为s的子串。要求p中的串长度小于等于8，
+且p中的串的个数小于等于500，同时要求s的长度小于等于1000。
+
+输入：["a","b","c","d"],4,"abc"
+输出：[true,true,true,false]
+ */
+public class Main1 {
+    public static void main(String[] args) {
+        String[] p = {"a","b","c","d"};
+        int n = 4;
+        String s = "abc";
+        System.out.println(s.contains("bc"));
+        /*System.out.println(s.substring(0,s.length()-1));
+        System.out.println(s.subSequence(0,s.length()));
+        System.out.println(s.subSequence(0,s.length()-1).equals(p[1]));
+        System.out.println(s.subSequence(0,s.length()-1).equals(p[0]));
+        System.out.println(s.subSequence(0,s.length()-1).equals(p[2]));
+        System.out.println(s.subSequence(0,s.length()-1).equals(p[3]));*/
+        Main1 main1 = new Main1();
+        boolean[] ret  = main1.chkSubStr(p,n,s);
+        System.out.println(Arrays.toString(ret));
+
+    }
+    public boolean[] chkSubStr(String[] p, int n, String s) {
+        boolean[] ret = new boolean[p.length];
+        for (int i = 0;i < n;i++) {
+            ret[i] = s.contains(p[i]);
+        }
+        return ret;
+    }
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class IsHuiWen {
     //先写一个方法来判断是否是回文串的方法
