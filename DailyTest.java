@@ -1,6 +1,120 @@
 
 
 
+/*
+变态跳台阶
+一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+ */
+
+//每个台阶都有跳与不跳两种情况（除了最后一个台阶），最后一个台阶必须跳。所以共用2^(n-1)中情况
+public class Main03 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int n = sc.nextInt();
+            System.out.println(JumpFloorII(n));
+        }
+    }
+    public static int JumpFloorII(int target) {
+        return (int)Math.pow(2,target-1);
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+青蛙跳台阶
+一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
+
+ */
+public class Main02 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int n = sc.nextInt();
+            System.out.println(JumpFloor(n));
+            System.out.println(JumpFloor2(n));
+        }
+    }
+
+    private static int JumpFloor2(int target) {
+        if (target <= 3 ) {
+            return target;
+        }
+        int temp = 0;
+        int fib1 = 2;
+        int fib2 = 3;
+        for (int i = 3;i < target;i++) {
+            temp = fib1+fib2;
+            fib1 = fib2;
+            fib2 = temp;
+        }
+        return temp;
+    }
+
+    public static int JumpFloor(int target) {
+        if (target <= 3) {
+            return target;
+        }
+        return JumpFloor(target-1)+JumpFloor(target-2);
+    }
+
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+斐波那契数列
+ */
+public class Main01 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int n = sc.nextInt();
+            //方法一：
+            System.out.println(Fibonacci(n));
+            //方法二：
+            System.out.println(Fib(n));
+        }
+    }
+    //方法一：递归
+    public static int Fibonacci(int n) {
+        if (n == 0) {
+            return 0;
+        }
+        if (n <= 2 && n > 0) {
+            return 1;
+        }
+        return Fibonacci(n-1)+Fibonacci(n-2);
+
+    }
+    //方法二：循环,比递归效率高
+    public static int Fib(int n) {
+        if (n <= 2) {
+            return 1;
+        }
+        int temp = 0;
+        int fib1 = 1;
+        int fib2 = 1;
+        for (int i = 2;i < n;i++) {
+            temp = fib1+fib2;
+            fib1 = fib2;
+            fib2 = temp;
+        }
+        return fib2;
+    }
+}
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
