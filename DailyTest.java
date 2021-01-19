@@ -1,6 +1,161 @@
 
 
 
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+  操作给定的二叉树，将其变换为源二叉树的镜像。
+ */
+    
+public class Main06 {
+    //先前序遍历这棵树的每个结点，如果遍历到的结点有子结点，就交换它的两个子节点，
+    //当交换完所有的非叶子结点的左右子结点之后，就得到了树的镜像
+    public void Mirror(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return;
+        }
+        // 交换左右子树
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+
+        Mirror(root.left);
+        Mirror(root.right);
+
+    }
+}
+class TreeNode {
+
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+输入一个  非递减排序(原数组后一个元素>=前一个元素)的数组的一个旋转，输出旋转数组的最小元素。
+NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
+
+输入：[3,4,5,1,2]
+输出：1
+
+ */
+    //二分查找,原数组后一个元素>=前一个元素
+    //这里我们把target 看作是右端点，来进行分析，那就要分析以下三种情况，看是否可以达到上述的目标。
+    //
+    //情况1，arr[mid] > target：4 5 6 1 2 3
+    //     arr[mid] 为 6， target为右端点 3， arr[mid] > target, 说明[first ... mid] 都是 >= target 的，
+    //     因为原始数组是非递减，所以可以确定答案为 [mid+1...last]区间,所以 first = mid + 1
+    //情况2，arr[mid] < target:5 6 1 2 3 4
+    //      arr[mid] 为 1， target为右端点 4， arr[mid] < target, 说明答案肯定不在[mid+1...last]，
+    //      但是arr[mid] 有可能是答案,所以答案在[first, mid]区间，所以last = mid;
+    //情况3，arr[mid] == target:
+    //      如果是 1 0 1 1 1， arr[mid] = target = 1, 显然答案在左边
+    //      如果是 1 1 1 0 1, arr[mid] = target = 1, 显然答案在右边
+    //      所以这种情况，不能确定答案在左边还是右边，那么就让last = last - 1;慢慢缩少区间，同时也不会错过答案。
+public class Main05 {
+    public static void main(String[] args) {
+        int[] a = {6501,6828,6963,7036,7422,7674,8146,8468,8704,8717,9170,9359,9719,9895,
+                9896,9913,9962,154,293,334,492,1323,1479,1539,1727,1870,1943,2383,2392,2996,
+                3282,3812,3903,4465,4605,4665,4772,4828,5142,5437,5448,5668,5706,5725,6300,6335};
+        System.out.println(minNumberInRotateArray(a));
+    }
+    public static int minNumberInRotateArray(int [] array) {
+        /*int start=0;
+        int end=array.length-1;
+        while(start<=end)
+        {
+            int mid=(start+end)/2;
+            if(end-start==1)
+                return array[end];
+            if(array[mid]>=array[start])
+                start=mid;
+            if(array[mid]<=array[end])
+                end=mid;
+        }
+        return -1;*/
+
+        //若数组大小为0，返回0。
+        if(array.length==0) {
+            return 0;
+        }
+        int start = 0;
+        int last = array.length-1;
+        //// 最后剩下一个元素，即为答案
+        while (start<last) {
+            //每次进入循环，start或last会变化，因此mid也会变化
+            int mid = (start+last)/2;
+            //因为原数组是非递减的，旋转后如果第一个元素<=最后一个元素，则第一个元素一定是最小的
+            if (array[start] <= array[last]) {
+                return array[start];
+            }else if (array[mid] < array[last]) {
+                last = mid;
+            }else if (array[mid] > array[last]) {
+                start = mid+1;
+            }else {
+                --last;
+            }
+       }
+        return array[last];
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+ */
+
+// push操作就直接往stack1中push，
+// pop操作需要分类一下：如果stack2为空，那么需要将stack1中的数据全部转移到stack2中，然后在对stack2进行pop，如果stack2不为空，直接pop就ok。
+public class Main04 {
+    //模拟入队列的栈
+    Stack<Integer> stack1 = new Stack<Integer>();
+    //模拟出队列的栈
+    Stack<Integer> stack2 = new Stack<Integer>();
+
+    public void push(int node) {
+        stack1.add(node);
+    }
+
+    public int pop() {
+        //如果stack2为空，那么需要将stack1中的数据全部转移到stack2中，然后在对stack2栈顶元素弹出
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                int temp = stack1.pop();
+                stack2.push(temp);
+            }
+        }
+        //如果stack2不为空，直接将stack2的栈顶元素弹出
+        return stack2.pop();
+    }
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 /*
 变态跳台阶
 一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
