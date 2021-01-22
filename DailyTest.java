@@ -5,6 +5,324 @@
 
 
 
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+平衡二叉树
+ */
+public class Main12 {
+    //判断是不是平衡二叉树
+    public boolean IsBalanced_Solution(TreeNode1 root) {
+        if (root==null) {
+            return true;
+        }
+        int l = height(root.left);
+        int r = height(root.right);
+        if (Math.abs(l-r) < 1) {
+            return IsBalanced_Solution(root.left) && IsBalanced_Solution(root.right);
+        }else {
+            return false;
+        }
+    }
+
+    //求二叉树的高度
+    public int height(TreeNode1 root) {
+        if (root == null) {
+            return 1;
+        }
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+        return Math.max(leftHeight,rightHeight);
+    }
+}
+class TreeNode1{
+    public int val;
+    TreeNode1 left = null;
+    TreeNode1 right = null;
+
+    public TreeNode1(int val) {
+        this.val = val;
+    }
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+构建乘积数组
+ */
+public class Main11 {
+    public static void main(String[] args) {
+        int[] a = {1,2,3,4,5};
+        System.out.println(Arrays.toString(multiply(a)));
+    }
+    public static int[] multiply(int[] A) {
+        int[] a = new int[A.length];
+        for (int i = 0;i < A.length;i++) {
+            a[i] = 1;
+            for (int j = 0;j < A.length;j++) {
+                if (j!=i) {
+                    a[i]*=A[j];
+                }
+            }
+        }
+        return a;
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+不用加减乘除做加法
+写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
+输入：1 2
+输出：3
+ */
+public class Main10 {
+    public static void main(String[] args) {
+        int a = 1;
+        int b = -2;
+        System.out.println(Add(a, b));
+        System.out.println(Add2(a,b));
+    }
+    public static int Add(int num1,int num2) {
+        if (num2>=0) {
+            for (int i = num2;i>0;i--) {
+                num1++;
+            }
+        }else {
+            for (int i = num2;i<0;i++) {
+                num1--;
+            }
+        }
+        return num1;
+    }
+
+    //法二：二进制位运算
+   /* 首先看十进制是如何做的： 5+7=12，三步走
+    第一步：相加各位的值，不算进位，得到2。
+    第二步：计算进位值，得到10. 如果这一步的进位值为0，那么第一步得到的值就是最终结果。
+
+    第三步：重复上述两步，只是相加的值变成上述两步的得到的结果2和10，得到12。
+
+    同样我们可以用三步走的方式计算二进制值相加： 5-101，7-111 第一步：相加各位的值，不算进位，得到010，二进制每位相加就相当于各位做异或操作，101^111。
+
+    第二步：计算进位值，得到1010，相当于各位做与操作得到101，再向左移一位得到1010，(101&111)<<1。
+
+    第三步重复上述两步， 各位相加 010^1010=1000，进位值为100=(010&1010)<<1。
+    继续重复上述两步：1000^100 = 1100，进位值为0，跳出循环，1100为最终结果。*/
+    public static int Add2(int num1,int num2) {
+        while (num2!=0) {
+            int temp = num1^num2;
+            num2 = (num1&num2)<<1;
+            num1 = temp;
+        }
+        return num1;
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+题目描述
+在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,
+并返回它的位置, 如果没有则返回 -1（需要区分大小写）.（从0开始计数）
+
+输入："google"
+输出：4
+ */
+public class Main09 {
+
+    public static void main(String[] args) {
+        String s = "google";
+        System.out.println(FirstNotRepeatingChar(s));
+        System.out.println(solution(s));
+        System.out.println(FirstNotRepeatingChar3(s));
+    }
+    public static int FirstNotRepeatingChar(String str) {
+
+        for (int i = 0;i < str.length();i++) {
+           char temp = str.charAt(i);
+            int count = 0;
+           for (int j = 0;j <str.length();j++) {
+               if (str.charAt(j) == temp) {
+                   count++;
+               }
+           }
+           if (count == 1) {
+               return i;
+           }
+        }
+        return -1;
+    }
+
+    //方法二：其实主要还是hash，利用每个字母的ASCII码作hash来作为数组的index。
+    // 首先用一个58长度的数组来存储每个字母出现的次数，
+    // 为什么是58呢，主要是由于A-Z对应的ASCII码为65-90，a-z对应的ASCII码值为97-122，
+    // 而每个字母的index=int(word)-65，比如g=103-65=38，
+    // 而数组中具体记录的内容是该字母出现的次数，最终遍历一遍字符串，
+    // 找出第一个数组内容为1的字母就可以了，时间复杂度为O(n)
+    public static int solution(String str){
+        int[] words = new int[58];
+        for(int i = 0;i<str.length();i++){
+            //此处可以不用加强转，因为英文字符可以自动转换为int
+            words[(str.charAt(i))-65] += 1;
+        }
+        for(int i=0;i<str.length();i++){
+            if(words[((int)str.charAt(i))-65]==1)
+                return i;
+        }
+        return -1;
+    }
+
+    //方法三：
+    public static int FirstNotRepeatingChar3(String str) {
+        if(str==null)return -1;
+        if(str.length()==0)return -1;
+        char[] ch=str.toCharArray();
+        int pos=-1;
+        int i=0,j=0;
+        for(i=0;i<ch.length;i++){
+            for(j=0;j<ch.length;j++){
+                if((ch[i]==ch[j])&&(i!=j))break;
+            }
+            if(j==ch.length){
+                pos=i;
+                break;
+            }
+        }
+        return pos;
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+合并两个有序的链表
+ */
+
+public class Main8 {
+    public ListNode Merge(ListNode list1,ListNode list2) {
+        //合并后的新链表的头结点
+        ListNode listNode = new ListNode(-1);
+        ListNode cur = listNode;//遍历用的节点
+        while (list1!=null && list2!=null) {
+            if (list1.val > list2.val) {
+                cur.next = list2;
+                cur = cur.next;
+                list2 = list2.next;
+            }else {
+                cur.next = list1;
+                cur = cur.next;
+                list1 = list1.next;
+            }
+        }
+        //退出循环说明至少有一个链表已经全部遍历完了，因为两个链表都是升序，
+        //所以剩下的未遍历的都是大于新链表的最后一个节点的
+        if (list1!=null) {
+            cur.next = list1;
+        }else {
+            cur.next = list2;
+        }
+        return listNode.next;
+    }
+}
+class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+二叉树的深度
+ */
+public class Main07 {
+    //递归
+    public int TreeDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return Math.max(TreeDepth(root.left),TreeDepth(root.right))+1;
+    }
+
+    //非递归，每遍历一层就加一
+    public int TreeDepth2(TreeNode root) {
+        if(root==null) return 0;
+        ArrayList<TreeNode> arr=new ArrayList<>();
+        arr.add(root);
+        int count=0;
+        while(arr.size()!=0){
+            count++;
+            for(int i=0; i<arr.size(); i++){
+                TreeNode temp=arr.remove(0);
+                if(temp.left!=null)
+                    arr.add(temp.left);
+                if(temp.right!=null)
+                    arr.add(temp.right);
+            }
+        }
+        return count;
+    }
+
+    public int TreeDepth3(TreeNode pRoot)
+    {
+        if(pRoot == null){
+            return 0;
+        }
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(pRoot);
+        int depth = 0, count = 0, nextCount = 1;
+        while(queue.size()!=0){
+            TreeNode top = queue.poll();
+            count++;
+            if(top.left != null){
+                queue.add(top.left);
+            }
+            if(top.right != null){
+                queue.add(top.right);
+            }
+            if(count == nextCount){
+                nextCount = queue.size();
+                count = 0;
+                depth++;
+            }
+        }
+        return depth;
+    }
+}
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
