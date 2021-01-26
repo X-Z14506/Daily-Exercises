@@ -1,8 +1,349 @@
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+/*
+对于每组输入，输出一个正整数，为n和m的最大公约数与最小公倍数之和。
+
+输入：10 20
+输出：30
+
+输入：15 20
+输出：65
+
+
+最大公约数和最小公倍数的关系：假设x和y的最大公约数是m,最小公倍数是n,则xy=mn
+
+ */
+
+public class Main12 {
+
+    public static void main(String[] args) throws IOException{
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        String [] s = bf.readLine().split(" ");
+        long n = Long.parseLong(s[0]);
+        long m = Long.parseLong(s[1]);
+        System.out.print(Yue(n,m)+ Bei(n,m));
+    }
+    public static long Yue(long x,long y){
+        while(x!=0){
+            long temp = y%x;
+            y = x;
+            x = temp;
+        }
+        return y;
+    }
+
+    //最大公约数和最小公倍数的关系：假设x和y的最大公约数是m,最小公倍数是n,则xy=mn
+    public static long Bei(long x,long y){
+        long s = Yue(x,y);
+        return x*y/s;
+    }
+
+
+
+    //效率太低，速度太慢不行
+    public static void main1(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        long n = Integer.parseInt(strings[0]);
+        long m = Integer.parseInt(strings[1]);
+
+        //求两个数的最大公约数
+        long min = Math.min(n,m);
+        long x = 1;
+        for (long i = min;i>0;i--) {
+            if (n%i==0 && m%i==0) {
+                x=i;
+                //System.out.println("最大公约数为："+i);
+                break;
+            }
+        }
+
+        //求两个数的最小公倍数
+        long max = Math.max(n,m);
+        long y = m*n;
+        for (long i = max;i <= m*n;i++) {
+            if (i%n==0 && i%m==0 ) {
+                y = i;
+                //System.out.println("最小公倍数为："+i);
+                break;
+            }
+        }
+        long sum = x+y;
+        System.out.println(sum);
+
+    }
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public class Main11 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(reader.readLine());
+        if (n<12) {
+            System.out.println(2);
+            return;
+        }
+        System.out.println((n/12)*4+2);
+       /* if (n%12==0) {
+            System.out.println((n/12)*4+2);
+        }*/
+        //System.out.println(2+((n/12)+1)*4);
+    }
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+小乐乐定闹钟
+
+输入描述:
+输入现在的时刻以及要睡的时长k（单位：minute），中间用空格分开。
+
+输入格式：hour:minute k(如hour或minute的值为1，输入为1，而不是01)
+
+(0 ≤ hour ≤ 23，0 ≤ minute ≤ 59，1 ≤ k ≤ 109)
+
+输出描述:
+对于每组输入，输出闹钟应该设定的时刻，输出格式为标准时刻表示法（即时和分都是由两位表示，位数不够用前导0补齐）。
+
+输入：
+0:0 100
+输出：
+01:40
+
+输入：
+1:0 200
+输出：
+04:20
+
+ */
+public class Main10{
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        //先按空格将读入的一行分成两部分，在从第一部分中按冒号将第一部分分成时和分
+        String[] strings1 = reader.readLine().split(" ");
+        String[] strings2 = strings1[0].split(":");
+
+        //当前时间的小时数
+        int curH = Integer.parseInt(strings2[0]);
+        //当前时间的分钟数
+        int curM = Integer.parseInt(strings2[1]);
+        //定时时间
+        int timer = Integer.parseInt(strings1[1]);
+        //定时的小时数
+        int hours = timer/60;
+        //定时的分钟数
+        int minutes = timer%60;
+
+        //定时时间到的时间的小时数
+        curH = (curH+hours+(curM+minutes)/60)%24;
+        //定时时间到的时间的分钟数
+        curM = (curM+minutes)%60;
+        System.out.println(String.format("%02d",curH)+":"+ String.format("%02d",curM));
+    }
+
+
+
+    public static void main2(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            String[] s = sc.nextLine().split(" ");
+            String[] time = s[0].split(":");
+            int sleep = Integer.parseInt(s[1]);
+            int hour = sleep/60;
+            int minute = sleep%60;
+            int curH = Integer.parseInt(time[0]);
+            int curM = Integer.parseInt(time[1]);
+            curH = (curH+hour+(minute+curM)/60)%24;
+            curM = (curM+minute)%60;
+            System.out.println(String.format("%02d",curH)+":"+ String.format("%02d",curM));
+        }
+    }
+    public static void main1(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String  data = sc.nextLine();
+        int p = data.indexOf(":");
+        int q = data.indexOf(" ");
+
+        int h = Integer.parseInt(data.substring(0, p));
+        int m = Integer.parseInt(data.substring(p+1, q));
+        int k = Integer.parseInt(data.substring(q+1));
+
+        //先将总小时数和总分钟数算出来，让该进位的进位
+        m = m + k % 60;
+        h = h + k / 60 + m / 60;
+
+        //在求出总小时相对于24小时制为几点，总分中数相对于60为多少分
+        m = m % 60;
+        h = h % 24;
+
+        String h1, m1;
+        if (h < 10){
+            h1 = "0" + h;
+        }else {
+            h1 = h + "";
+        }
+
+        if (m < 10){
+            m1 = "0" + m;
+        }else {
+            m1 = m + "";
+        }
+
+        System.out.println(h1 + ":" + m1);
+    }
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+十进制转六进制
+ */
+public class Main09 {
+    public static void main1(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            System.out.println(Integer.toString(sc.nextInt(),6));
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(reader.readLine());
+        System.out.println(Integer.toString(Integer.parseInt(reader.readLine()),16));
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+井字棋
+KiKi和BoBo玩 “井”字棋。也就是在九宫格中，只要任意行、列，或者任意对角线上面出现三个连续相同的棋子，就能获胜。请根据棋盘状态，判断当前输赢。
+
+输入描述:
+三行三列的字符元素，代表棋盘状态，字符元素用空格分开，代表当前棋盘，其中元素为K代表KiKi玩家的棋子，为O表示没有棋子，为B代表BoBo玩家的棋子。
+输出描述:
+如果KiKi获胜，输出“KiKi wins!”；
+如果BoBo获胜，输出“BoBo wins!”；
+如果没有获胜，输出“No winner!”。
+
+输入:
+K O B
+O K B
+B O K
+
+输出：
+KiKi wins!
+
+ */
+public class Main08 {
+    public static void main(String[] args) throws IOException {
+        Scanner sc = new Scanner(System.in);
+        char[][] strings = new char[3][3];
+        for (int i =0;i < 3;i++) {
+            String[] s = sc.nextLine().split(" ");
+            for (int j = 0;j < 3;j++) {
+                strings[i][j] = s[j].charAt(0);
+            }
+        }
+
+      /*  BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        char[][] input = new char[3][3];
+
+        for(int i=0; i<3; i++){
+            String row = br.readLine();
+            for(int j=0; j<3; j++){
+                input[i][j] = row.charAt(2*j);
+            }
+        }
+*/
+        boolean KKWin = false;
+        boolean BBWin = false;
+        KKWin = checkWinner('K',strings);
+        BBWin = checkWinner('B',strings);
+        if (KKWin==true && BBWin==true){
+            System.out.println("No winner!");
+        }else if (KKWin==true) {
+            System.out.println("KiKi wins!");
+        }else if (BBWin==true) {
+            System.out.println("BoBo wins!");
+        }else  {
+            System.out.println("No winner!");
+        }
+    }
+    static boolean checkWinner(char c ,char[][] arr ) {
+        int count = 0;
+        int size = 3;
+        //1.先判断主对角线是否满足
+        for (int i =0;i < size;i++) {
+            if (arr[i][i] == c) {
+                count++;
+            }
+        }
+        if (count==3) {
+            return true;
+        }
+        //走到这里说明没有返回，count要重新置为0，用来判断下一个位置是否满足
+        count = 0;
+
+        //2.在判断副对角线是否满足
+        if (arr[0][2]==c && arr[1][1]==c && arr[2][0] == c) {
+            return true;
+        }
+
+        //3.判断行是否满足
+        for (int i = 0;i < size;i++) {
+            for (int j = 0;j < size;j++) {
+                if (arr[i][j]==c){
+                    count++;
+                }
+            }
+            if (count==3) {
+                return true;
+            }
+            count=0;
+        }
+
+        //判断列是否满足
+        for (int i = 0;i < size;i++) {
+            for (int j = 0;j<size;j++) {
+                if (arr[j][i] == c) {
+                    count++;
+                }
+            }
+            if (count==3) {
+                return true;
+            }
+            count=0;
+        }
+
+        //程序走到这里说明都不满足
+        return false;
+    }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /*
