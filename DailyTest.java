@@ -1,5 +1,128 @@
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+小乐乐与序列
+ */
+
+public class Main15 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(reader.readLine());
+        StringBuilder sb = new StringBuilder();
+        int[] a = new int[n];
+        for (int i = 0;i < n;i++) {
+            a[i] = Integer.parseInt(reader.readLine());
+        }
+        Arrays.sort(a);
+        System.out.print(a[0]+" ");
+        for (int i = 1;i < n;i++) {
+            if (a[i-1]!=a[i]) {
+                sb.append(a[i]+" ");
+            }
+        }
+        System.out.print(sb.toString().trim());
+       /* List<Integer> list1 = new ArrayList<>();
+        for (int i = 0;i<list.size();i++) {
+            if (!list1.contains(list.get(i))) {
+                list1.add(list.get(i));
+                System.out.print(list.get(i)+" ");
+            }
+        }*/
+    }
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+青蛙跳台阶
+ */
+public class Main14 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int n = sc.nextInt();
+            if (n<=3) {
+                System.out.println(n);
+            }else {
+                int ret = fib(n);
+                System.out.println(ret);
+            }
+        }
+    }
+    static int fib(int n) {
+        if (n<4) {
+            return n;
+        }else {
+            return fib(n-1)+fib(n-2);
+        }
+    }
+
+    public static void main1(String[] args)throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        if(n == 1){
+            System.out.println(1);
+        }else if(n == 2){
+            System.out.println(2);
+        }else{
+            int a = 1;
+            int b = 2;
+            int c;
+            for(int i = 3; i <= n; i++){
+                c = a + b;
+                a = b;
+                b = c;
+            }
+            System.out.print(b);
+        }
+    }
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+想把每位的数变成0或1。如果某一位是奇数，就把它变成1，如果是偶数，那么就把它变成0
+输入：22222
+输出：0
+
+输入：123
+输出：101
+ */
+public class Main13 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while(sc.hasNext()) {
+            String s = sc.nextLine();
+            char[] c = s.toCharArray();
+            for (int i = 0;i < c.length;i++) {
+                if (c[i]%2==0) {
+                    c[i]='0';
+                }else {
+                    c[i]='1';
+                }
+            }
+            String newStr = new String(c);
+            int a = Integer.parseInt(newStr);
+            System.out.println(a);
+        }
+    }
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
