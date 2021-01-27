@@ -1,5 +1,224 @@
 
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+public class Main20 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String[] strings = sc.nextLine().split(" ");
+        double a = Double.parseDouble(strings[0]);
+        double b = Double.parseDouble(strings[1]);
+        double c = Double.parseDouble(strings[2]);
+        double d1 = max3(a+b,b,c);
+        double d2 = max3(a,b+c,c);
+        double d3 = max3(a,b,b+c);
+        System.out.println(String.format("%.2f",d1/(d2+d3)));
+
+    }
+
+    private static double max3(double a,double b,double c) {
+        double max =  Math.max(Math.max(a,b),c);
+
+        return max;
+    }
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+算一下有多少同学被叫家长。
+输入：
+3
+80 100 90
+40 70 65
+20 84 93
+
+输出：
+1
+
+ */
+
+public class Main19 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = Integer.parseInt(sc.nextLine());
+        int count = 0;
+        for (int i = 0;i < n;i++) {
+            String[] s = sc.nextLine().split(" ");
+            double score = avgScore(s);
+            if (score < 60 ) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+    static double avgScore(String[] s) {
+        int[] ints = new int[s.length];
+        double avg = 0;
+        double sum = 0;
+        for (int i = 0;i< s.length;i++) {
+            ints[i] = Integer.parseInt(s[i]);
+            sum+=ints[i];
+        }
+        avg = sum/3;
+        return avg;
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+小乐乐输入百分制成绩，他想将成绩转换成等级制。
+转换规则为：90-100为’A’，80-89为’B’，70-79为’C’，60-69为’D’，59以下为’E’。如果输入的成绩不在0-100之间，输出’F’。
+ */
+public class Main18 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int score = sc.nextInt();
+            System.out.println(change(score));
+        }
+    }
+    static char change(int score){
+        if (score>=90 && score<=100) {
+            return 'A';
+        }else if (score>=80 && score <= 89) {
+            return 'B';
+        }else if (score>=70 && score <= 79) {
+            return 'C';
+        }else if (score>=60 && score <= 69) {
+            return 'D';
+        }else if (score>=0 && score <= 59) {
+            return 'E';
+        }else {
+            return 'F';
+        }
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+小乐乐与二段数
+ */
+public class Main17 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Integer> arr = new ArrayList<>();
+        int temp;
+        while (true) {
+            temp = sc.nextInt();
+            if (temp == 0) {
+                break;
+            } else {
+                arr.add(temp);
+            }
+        }
+        for (Integer o : arr) {
+            printMinDoubleNumber(o);
+        }
+    }
+
+    public static void printMinDoubleNumber(int number) {
+        long temp = number;
+        while (true) {
+            if (isMinDoubleNumber(temp)) {
+                System.out.println(number + ": " + temp);
+                return;
+            }
+            temp += number;
+        }
+    }
+
+    public static boolean isMinDoubleNumber(long number) {
+        if (number < 10) {
+            return false;
+        }
+        long temp;
+        long preTemp = number % 10;
+        int count = 1;
+        number /= 10;
+        while (number > 0) {
+            if (count > 2) return false;
+            temp = number % 10;
+            if (temp != preTemp) {
+                count++;
+            }
+            preTemp = temp;
+            number /= 10;
+        }
+
+        if (count == 2) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+小乐乐与字符串
+如“ABC”的子串有“A”、“B”、“C”、“AB”、“AC”、“BC”、“ABC”。
+
+输入：
+CCHNCHN
+输出：7
+
+输入：
+CCHNCHNCHNCHN
+输出：30
+
+ */
+
+//统计C的数量，每加一个C，后面所有的H都会跟着在原有的子串数基础上加一个子串数，同理，每加一个H，后面所有的N都会跟着在原有子串数的基础上加一个子串
+//  即H只需要关注前面C的数量，N只需要关注前面H的数量 ,最终输出N能为几个子串所用，即为子串数量
+//  方便观察起见，为其编号,实际并无编号
+//  如：C1C2HN             就有两种子串数  C1HN和C2HN
+//     C1C2H1H2N          就有四种子串数  C1H1N C1H2N C2H1N C2H2N
+//     C1C2H1N1C3H2N2     就有七种子串数  C1H1N1 C1H1N2 C1H2N2 C2H1N1 C2H1N2 C2H2N2 C3H2N2
+
+public class Main16 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String s = reader.readLine();
+        char[] chars = s.toCharArray();
+        long c = 0; long h = 0; long n = 0;
+        for (int i =0;i < chars.length;i++) {
+            if (chars[i] == 'C') {
+                c++;
+            }else if (chars[i]=='H'){
+                h = h+c;
+            }else if (chars[i] == 'N'){
+                n = n+h;
+            }
+        }
+        System.out.println(n);
+    }
+}
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
