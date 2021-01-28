@@ -1,6 +1,194 @@
 
 
 
+
+
+public class Main25 {
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String input = br.readLine();
+        //将读到的一行输出
+        System.out.println(input);
+    }
+    public static void main1(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        System.out.println();
+        for (int i = 0;i < strings.length;i++) {
+            System.out.print(strings[i]+" ");
+        }
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+题目描述
+输入NxM矩阵，矩阵元素均为整数，计算其中大于零的元素之和。
+
+输入描述:
+第一行为N M(N: 矩阵行数；M: 矩阵列数,且M,N<=10)，接下来的N行为矩阵各行。
+输出描述:
+一行，其中大于零的元素之和。
+
+输入：
+
+3 3
+2 3 4
+-5 -9 -7
+0 8 -4
+
+输出：17
+ */
+public class Main24 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings1 = reader.readLine().split(" ");
+        int M = Integer.parseInt(strings1[0]);
+        int N = Integer.parseInt(strings1[1]);
+        int sum = 0;
+        for (int i = 0;i < M;i++) {
+            String[] strings = reader.readLine().split(" ");
+            for (int j = 0;j < strings.length;j++) {
+                if (Integer.parseInt(strings[j]) > 0) {
+                    sum+=Integer.parseInt(strings[j]);
+                }
+            }
+        }
+        System.out.println(sum);
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+题目描述
+
+有一个有序数字序列，从小到大排序，将一个新输入的数插入到序列中，保证插入新数后，序列仍然是升序。
+输入描述:
+共三行，
+第一行输入一个整数(0≤N≤50)。
+第二行输入N个升序排列的整数，输入用空格分隔的N个整数。
+第三行输入想要进行插入的一个整数。
+输出描述:
+输出为一行，N+1个有序排列的整数。
+
+输入：7
+    5 30 40 50 60 70 90
+    20
+
+输出：5 20 30 40 50 60 70 90
+
+ */
+public class Main23 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int num = scanner.nextInt();
+        int[] ints = new int[num+1];
+        for (int i = 0;i< num;i++) {
+            ints[i] = scanner.nextInt();
+        }
+        int num2 = scanner.nextInt();
+        ints[num] = num2;
+        Arrays.sort(ints);
+        //System.out.println(Arrays.toString(ints));
+        for (int i = 0;i<ints.length;i++) {
+            System.out.print(ints[i]+" ");
+        }
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+
+        题目描述
+        输入n科成绩（浮点数表示），统计其中的最高分，最低分以及平均分。
+
+        输入描述:
+        两行，
+
+        第1行，正整数n（1≤n≤100）
+
+        第2行，n科成绩（范围0.0~100.0），用空格分隔。
+        输出描述:
+        输出一行，三个浮点数，分别表示，最高分，最低分以及平均分（小数点后保留2位），用空格分隔。
+
+        输入：5
+             99.5 100.0 22.0 60.0 88.5
+
+        输出：100.00 22.00 74.00
+
+ */
+
+
+public class Main22 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        double[] s = new double[n];
+        for (int i = 0; i < n;i++) {
+            double score = Double.parseDouble(scanner.next());
+            s[i] = score;
+        }
+        double sum = 0;
+        double max = s[s.length-1];
+        double min = s[0];
+        for (int i = 0; i < s.length;i++) {
+            sum += s[i];
+        }
+        double avg = sum/s.length;
+        System.out.println(String.format("%.2f",max)+" "+String.format("%.2f",min)+" "+String.format("%.2f",avg));
+    }
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+
+题目描述
+今年是2019年，KiKi想知道1~2019中有多少个包含数字9的数。包含数字的数是指有某一位是“9”的数，例如“2019”、“199”等。
+
+ */
+public class Main21{
+    public static void main(String[] args) {
+        String s = null;
+        int count = 0;
+        for(int i = 1;i<=2019;i++) {
+             s = String.valueOf(i);
+            for(int j = 0; j < s.length();j++) {
+                if (s.charAt(j)=='9') {
+                    count++;
+                    break;
+                }
+            }
+        }
+        System.out.println(count);
+    }
+}
+
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
