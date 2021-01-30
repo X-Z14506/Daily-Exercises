@@ -1,4 +1,753 @@
 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+    题目描述
+        KiKi想知道已经给出的三条边a，b，c能否构成三角形，如果能构成三角形，判断三角形的类型（等边三角形、等腰三角形或普通三角形）。
+        输入描述:
+        题目有多组输入数据，每一行输入三个a，b，c(0<a,b,c<1000)，作为三角形的三个边，用空格分隔。
+        输出描述:
+        针对每组输入数据，输出占一行，如果能构成三角形，等边三角形则输出“Equilateral triangle!”，等腰三角形则输出“Isosceles triangle!”，
+        其余的三角形则输出“Ordinary triangle!”，反之输出“Not a triangle!”。
+
+        输入：2 3 2
+             3 3 3
+        输出：Isosceles triangle!
+             Equilateral triangle!
+ */
+public class Main38 {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        while (s.hasNext()) {
+            String[] strings = s.nextLine().split(" ");
+            int a = Integer.parseInt(strings[0]);
+            int b = Integer.parseInt(strings[1]);
+            int c = Integer.parseInt(strings[2]);
+            if (a+b>c && a+c>b && b+c>a) {
+                if (a==b && b==c) {
+                    System.out.println("Equilateral triangle!");
+                }else if (a==b || a==c || b==c) {
+                    System.out.println("Isosceles triangle!");
+                }else {
+                    System.out.println("Ordinary triangle!");
+                }
+            }else {
+                System.out.println("Not a triangle!");
+            }
+        }
+
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+        变种水仙花数 - Lily Number：把任意的数字，从中间拆分成两个数字，比如1461 可以拆分成（1和461）,（14和61）,（146和1),
+        如果所有拆分后的乘积之和等于自身，则是一个Lily Number。
+        例如：
+        655 = 6 * 55 + 65 * 5
+        1461 = 1*461 + 14*61 + 146*1
+
+        求出 5位数中的所有 Lily Number。
+
+        输入描述:
+        无
+        输出描述:
+        一行，5位数中的所有 Lily Number，每两个数之间间隔一个空格。
+ */
+public class Main31 {
+    public static void main1(String[] args) {
+        for (int i = 10000;i <= 99999; i++) {
+            //将整数转换为字符串
+            String s = Integer.toString(i);
+            //求出4种乘法的乘积
+            //第一个数字*后四位数字
+            int first = Integer.parseInt(s.substring(0,1)) * Integer.parseInt(s.substring(1,5));
+            //前两位数字*后三位数字
+            int second = Integer.parseInt(s.substring(0,2)) * Integer.parseInt(s.substring(2,5));
+            //前三位数字*后两位数字
+            int third = Integer.parseInt(s.substring(0,3)) * Integer.parseInt(s.substring(3,5));
+            //前四位数字*最后一个数字
+            int fourth = Integer.parseInt(s.substring(0,4)) * Integer.parseInt(s.substring(4,5));
+
+            //判断是否为Lily Number
+            if (first+second+third+fourth == i) {
+                System.out.print(i+" ");//14610 16420 23610 34420 65500
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int a, b, c, d, e;
+        int r1, r2, r3, r4;
+
+        for (int i = 10000; i < 99999; i++) {
+            r1 = (i / 10000) * (i % 10000);
+            r2 = (i / 1000) * (i % 1000);
+            r3 = (i / 100) * (i % 100);
+            r4 = (i / 10) * (i % 10);
+
+            if (i == (r1 + r2 + r3 + r4)) {
+                System.out.print(i);
+                System.out.print(" ");
+            }
+
+        }
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+    题目描述
+        KiKi非常喜欢网购，在一家店铺他看中了一件衣服，他了解到，如果今天是“双11”（11月11日）则这件衣服打7折，“双12” （12月12日）则这件衣服打8折，
+        如果有优惠券可以额外减50元（优惠券只能在双11或双12使用），求KiKi最终所花的钱数。
+        输入描述:
+        一行，四个数字，第一个数表示小明看中的衣服价格，第二和第三个整数分别表示当天的月份、当天的日期、第四个整数表示是否有优惠券（有优惠券用1表示，无优惠券用0表示）。
+        输出描述:
+        一行，小明实际花的钱数（保留两位小数）。（提示：不要指望商家倒找你钱）
+
+        输入：1000.0 11 11 1
+        输出：650.00
+        输入：999.8 12 12 0
+        输出：799.84
+        输入：66.6 11 11 1
+        输出：0.00
+ */
+public class Main30 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String[] s = scanner.nextLine().split(" ");
+        double price = Double.parseDouble(s[0]);
+        int month = Integer.parseInt(s[1]);
+        int day = Integer.parseInt(s[2]);
+        int i = Integer.parseInt(s[3]);
+
+        //当今天是双11时
+        if (month==11 && day==11) {
+            //有优惠券
+            if (i == 1) {
+                //如果需要花费的钱减去50小于0即为0.00
+                double pay = price*0.7-50 > 0 ? price*0.7-50 : 0.00;
+                System.out.println(String.format("%.2f",pay));
+            }
+            //无优惠券
+            if (i == 0) {
+                double pay = price*0.7;
+                System.out.println(String.format("%.2f",pay));
+            }
+        }else if (month==12 && day==12) {
+            if (i==1) {
+                double pay = price*0.8-50 > 0 ? price*0.8-50 : 0.00;
+                System.out.println(String.format("%.2f",pay));
+            }
+            if (i==0) {
+                double pay = price*0.8;
+                System.out.println(String.format("%.2f",pay));
+            }
+        }else {
+            System.out.println(String.format("%.2f",price));
+        }
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+    题目描述
+        不使用累计乘法的基础上，通过移位运算（<<）实现2的n次方的计算。
+
+        输入描述:
+        多组输入，每一行输入整数n（0 <= n < 31）。
+        输出描述:
+        针对每组输入输出对应的2的n次方的结果
+
+        输入：2
+             10
+        输出：4
+             1024
+ */
+    //  <<左移是乘2
+//      >>右移是除2
+
+
+public class Main24 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            String s = scanner.nextLine();
+            System.out.println(1<<Integer.parseInt(s));
+        }
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+        题目描述
+            根据给出的三角形3条边a, b, c（0 < a, b, c < 100,000），计算三角形的周长和面积。
+            输入描述:
+            一行，三角形3条边（能构成三角形），中间用一个空格隔开。
+            输出描述:
+            一行，三角形周长和面积（保留两位小数），中间用一个空格隔开，输出具体格式详见输出样例。
+
+            输入：3 3 3
+            输出：circumference=9.00 area=3.90
+ */
+public class Main21 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String[] s = scanner.nextLine().split(" ");
+        double circumference = 0;
+        double area = 1;
+        for (int i = 0; i < s.length;i++) {
+            circumference+=Double.parseDouble(s[i]);
+        }
+        double p = circumference/2;
+        double ret = 1;
+        for (int i = 0;i<s.length;i++) {
+            ret *= ( p - Double.parseDouble(s[i]));
+        }
+        ret*=p;
+        area = Math.sqrt(ret);
+        System.out.println("circumference="+String.format("%.2f",circumference)+" area="+String.format("%.2f",area));
+
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+输出一个图形
+    *
+   ***
+  *****
+ *******
+*********
+ *******
+  *****
+   ***
+    *
+
+Process finished with exit code 0
+
+ */
+public class Main7 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        //总共9行
+        int lay = input.nextInt();
+        //输出前5行
+        for (int m = 1; m <= (lay + 1) / 2; m++){
+            //每一行先输出空格
+            for (int b = 1; b <= (lay + 1) / 2 - m; b++){
+                System.out.print(" ");
+            }
+            //在输出*号
+            for (int c = 1; c <= m * 2 - 1; c++){
+                System.out.print("*");
+            }
+            //一行打印完了需要换行
+            System.out.println();
+        }
+        //打印后4行
+        for (int d = (lay + 1) / 2 - 1; d >= 1; d--){
+            //先打印后四行的空格
+            for (int b = 1; b <= (lay + 1) / 2 - d; b++){
+                System.out.print(" ");
+            }
+            //在打印后四行的*号
+            for (int c = (lay + 1) / 2 - d; c <= (lay + 1) / 2 - 2 + d; c++){
+                System.out.print("*");
+            }
+            //每行打印完换行
+            System.out.println();
+        }
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+        输入一个字符，用它构造一个三角形金字塔。
+        输入描述:
+        输入只有一行，一个字符。
+        输出描述:
+        该字符构成的三角形金字塔
+
+        输入：1
+        输出：
+            1
+           1 1
+          1 1 1
+         1 1 1 1
+        1 1 1 1 1
+ */
+public class Main6 {
+    public static void main  (String[] args) throws IOException {
+        char c=(char)System.in.read();
+        int n = 5;
+        for(int i = 1; i <= n; i++){   // 控制行数
+            for (int m = 1; m <= n-i; m++) { // 左侧空格
+                System.out.print(" ");
+            }
+            for (int j = 1; j <= 2*i-1; j++) {
+                if ((j+1)%2 == 0){  // 基数输出1，偶数输出空格
+                    System.out.print(c);
+                }else {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+        BoBo写了一个十六进制整数ABCDEF，他问KiKi对应的十进制整数是多少。
+ */
+public class Main2 {
+    public static void main1(String[] args) {
+        String s = "ABCDEF";
+        String str = new BigInteger(s,16).toString(10);
+        System.out.printf("%15s",str);//       11259375
+    }
+
+    public static void main2(String[] args) {
+        String s = Integer.valueOf("ABCDEF", 16).toString();
+        StringBuilder sb = new StringBuilder(15);
+        for (int i = 0; i < 15 - s.length(); i++) {
+            sb.append(" ");
+        }
+        sb.append(s);
+        System.out.println(sb);//       11259375
+    }
+
+    public static void main3(String[] args) {
+        //       11259375
+        System.out.println("       "+Integer.parseInt("ABCDEF",16));
+    }
+
+    public static void main(String[] args) {
+        //       11259375
+        System.out.printf("%15s",Integer.parseInt("ABCDEF",16));
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+第一行包含两个整数n和m，表示一个矩阵包含n行m列
+从2到n+1行，每行输入m个整数
+接下来一行输入k，表示要执行k次操作
+接下来有k行，每行包括一个字符t和两个数a和b，t代表需要执行的操作，当t为字符'r'时代表进行行变换，当t为字符'c'时代表进行列变换，a和b为需要互换的行或列
+
+输入：
+2 2
+1 2
+3 4
+1
+r 1 2
+
+输出:
+3 4
+1 2
+
+ */
+
+public class Main06 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        int n = Integer.parseInt(strings[0]);
+        int m = Integer.parseInt(strings[1]);
+        String[][] strings1 = new String[n][m];
+
+        //给二维数组赋值
+        for (int i = 0;i < n;i++) {
+            strings = reader.readLine().split(" ");
+            strings1[i] = strings;
+        }
+
+        int k = Integer.parseInt(reader.readLine());
+        while (k > 0) {
+            strings = reader.readLine().split(" ");
+            String t = strings[0];
+            int a = Integer.parseInt(strings[1]);
+            int b = Integer.parseInt(strings[2]);
+
+            //如果t为"r"，交换a行和b行
+            if ("r".equals(t)) {
+                //交换行的值
+                for (int i = 0;i < m;i++) {
+                    String temp = strings1[a-1][i];
+                    strings1[a-1][i] = strings1[b-1][i];
+                    strings1[b-1][i] = temp;
+                }
+            }
+
+            //如果twe"c"，交换a列和b列
+            if ("c".equals(t)) {
+                //交换列的值
+                for (int i = 0;i < n;i++) {
+                    String temp = strings1[i][a-1];
+                    strings1[i][a-1] = strings1[i][b-1];
+                    strings1[i][b-1] = temp;
+                }
+            }
+            k--;
+        }
+
+        //打印
+        for (int i = 0;i < n;i++) {
+            for (int j = 0;j < m;j++) {
+                System.out.print(strings1[i][j]+" ");
+            }
+            System.out.println();
+        }
+
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+矩阵的转置
+
+输入：
+2 3
+1 2 3
+4 5 6
+
+输出：
+1 4
+2 5
+3 6
+
+ */
+public class Main05 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        int n = Integer.parseInt(strings[0]);
+        int m = Integer.parseInt(strings[1]);
+
+         String[][] str = new String[n][m];
+        for (int i = 0;i < n;i++) {
+            String[] strings1 = reader.readLine().split(" ");
+            for (int j = 0;j < m;j++) {
+                str[i][j] = strings1[j];
+            }
+        }
+
+        for (int i = 0;i < m;i++) {
+            for (int j = 0;j<n;j++) {
+                System.out.print(str[j][i] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+KiKi想知道一个n阶方矩是否为上三角矩阵，请帮他编程判定。上三角矩阵即主对角线以下的元素都为0的矩阵，主对角线为从矩阵的左上角至右下角的连线。
+
+输入：
+3
+1 2 3
+0 4 5
+0 0 6
+
+输出：
+YES
+
+ */
+
+public class Main04 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(reader.readLine());
+
+        String[][] strings1 = new String[n][n];
+        for (int i = 0;i < n;i++) {
+            String[] strings = reader.readLine().split(" ");
+            for (int j = 0;j < n;j++) {
+                strings1[i][j] = strings[j];
+                if (i > j && !"0".equals(strings1[i][j])) {
+                    System.out.println("NO");
+                    break;
+                }
+            }
+        }
+        System.out.println("YES");
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+两个n行m列的矩阵，他想知道两个矩阵是否相等
+
+输入：
+2 2
+1 2
+3 4
+1 2
+3 4
+
+输出：
+Yes
+ */
+public class Main03 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        int n = Integer.parseInt(strings[0]);
+        int m = Integer.parseInt(strings[1]);
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0;i < 2*n;i++) {
+            strings = reader.readLine().split(" ");
+            for (int j = 0;j < m;j++) {
+                list.add(Integer.parseInt(strings[j]));
+            }
+        }
+        //用两个指针遍历list并比较
+        int pre = 0;
+        int last = m*n;
+        //判断的标志
+        boolean flag = true;
+
+        for (int i = 0;i < m*n;i++) {
+            if (list.get(pre++) != list.get(last++)) {
+                flag = false;
+            }
+        }
+        if (flag) {
+            System.out.println("Yes");
+        }else {
+            System.out.println("No");
+        }
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+从n行m列的方阵队列中找到身高最高的人的位置
+
+输入：
+2 2
+175 180
+176 185
+
+输出：
+2 2
+
+ */
+public class Main02 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        int n = Integer.parseInt(strings[0]);
+        int m = Integer.parseInt(strings[1]);
+        //先创建一个list按顺序存放所有人的身高值
+        List<String> list = new ArrayList<>();
+        for (int i = 0;i < n;i++) {
+            strings = reader.readLine().split(" ");
+            for (int j = 0;j < strings.length;j++) {
+                list.add(strings[j]);
+            }
+        }
+
+
+        int[] max = new int[2];
+        int maxNum = 0;
+
+        //ArrayList底层数组的下标
+        int index = 0;
+        //将list内的值按顺序存入二维数组，随后进行比较，找出最大值，最大值的下标存入一维数组
+        int[][] a = new int[n][m];
+        for (int i = 0;i < n;i++) {
+            for (int j = 0;j < m;j++) {
+                a[i][j] = Integer.parseInt(list.get(index));
+                if (a[i][j] > maxNum) {
+                    maxNum = a[i][j];
+                    max[0] = i+1;
+                    max[1] = j+1;
+                }
+                index++;
+            }
+        }
+        System.out.println(max[0]+" "+max[1]);
+
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+题目描述
+KiKi现在得到一个包含n*m个数的整数序列，现在他需要把这n*m个数按顺序规划成一个n行m列的矩阵并输出，请你帮他完成这个任务。
+输入描述:
+一行，输入两个整数n和m，用空格分隔，第二行包含n*m个整数（范围-231~231-1）。(1≤n≤10, 1≤m≤10)
+输出描述:
+输出规划后n行m列的矩阵，每个数的后面有一个空格。
+
+输入：
+2 3
+1 2 3 4 5 6
+
+输出：
+1 2 3
+4 5 6
+
+ */
+
+public class Main01 {
+    //法二：
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        int n = Integer.parseInt(strings[0]);
+        int m = Integer.parseInt(strings[1]);
+        strings = reader.readLine().split(" ");
+        int index = 0;//定义一维数组的下标
+
+        //开辟一个n*m的二维数组，将一维数组内的元素按顺序放入二维数组
+        String[][] str = new String[n][m];
+        for (int i = 0;i < n;i++) {
+            for (int j = 0;j < m;j++) {
+                str[i][j] = strings[index];
+                System.out.print(str[i][j]+" ");
+                index++;
+            }
+            System.out.println();
+        }
+    }
+
+    //法一
+    public static void main1(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        //int n = Integer.parseInt(strings[0]);
+        int m = Integer.parseInt(strings[1]);
+        String[] strings1 = reader.readLine().split(" ");
+        for (int j = 1;j <= strings1.length;j++) {
+            if (j % m == 0) {
+                System.out.print(strings1[j-1]+" ");
+                System.out.println();
+            }else {
+                System.out.print(strings1[j-1]+" ");
+            }
+        }
+
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+小乐乐计算求和
+小乐乐想计算一下1!+2!+3!+...+n!。
+ */
+public class Main{
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        //n=1的时候，不满足第一个循环条件，返回1
+        //n>1的时候，开始加阶乘
+        int sum = 1;
+        for(int i = 2; i <= n;i++) {
+            int e = 1;
+            for(int j = 1; j <= i;j++) {
+                e*=j;
+            }
+            sum+=e;
+        }
+        System.out.println(sum);
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
