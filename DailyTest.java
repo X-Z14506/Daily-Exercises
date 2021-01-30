@@ -1,5 +1,96 @@
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/*
+KiKi得到了一个n行m列的矩阵，现在他想知道第x行第y列的值是多少，请你帮助他完成这个任务。
+
+输入描述:
+第一行包含两个数n和m，表示这个矩阵包含n行m列。从2到n+1行，每行输入m个整数（范围-231~231-1），
+用空格分隔，共输入n*m个数，表示矩阵中的元素。接下来一行输入x和y，用空格分隔，表示KiKi想得到的元素的位置。(1≤x≤n≤10，1≤y≤m≤10)
+
+输出描述:
+一行，输出一个整数值，为KiKi想知道的值。
+
+输入：
+2 3
+1 2 3
+4 5 6
+1 2
+
+输出：2
+ */
+public class Main32 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] strings = reader.readLine().split(" ");
+        int n = Integer.parseInt(strings[0]);
+        int m = Integer.parseInt(strings[1]);
+        int[][] a = new int[n][m];
+        //将n行m列的数全部放入n*m的二维数组中
+        for (int i = 0 ;i < n;i++) {
+            //每进一次外层循环，读取一行数
+            String[] strings1 = reader.readLine().split(" ");
+            for (int j = 0;j < strings1.length;j++) {
+                a[i][j] = Integer.parseInt(strings1[j]);
+            }
+        }
+       /* System.out.println(Arrays.toString(a[0]));
+        System.out.println(Arrays.toString(a[1]));*/
+        String[] strings2 = reader.readLine().split(" ");
+        int i = Integer.parseInt(strings2[0]);
+        int j = Integer.parseInt(strings2[1]);
+        System.out.println(a[i-1][j-1]);
+    }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+输入一个班级5个学生各5科成绩，输出5个学生各5科成绩及总分。
+输出描述：五行，按照输入顺序每行输出一个学生的5科成绩及总分（小数点保留1位），用空格分隔。
+
+
+输入：
+98.5 96.0 100 99 88
+60.5 77 88.5 99 60
+80 80.5 89 91 92
+93 94 95.5 96 97.5
+100 98 88.5 88 78.5
+
+输出：
+98.5 96.0 100.0 99.0 88.0 481.5
+60.5 77.0 88.5 99.0 60.0 385.0
+80.0 80.5 89.0 91.0 92.0 432.5
+93.0 94.0 95.5 96.0 97.5 476.0
+100.0 98.0 88.5 88.0 78.5 453.0
+
+ */
+public class Main31 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String string = null;
+        int[] score = new int[5];
+        //循环5次，只要读到的不为空，就执行while循环
+        while ((string = reader.readLine()) != null) {
+            //每进一次循环，给一次sum
+            int sum = 0;
+            String[] strings = string.split(" ");
+            for (int i = 0;i < strings.length;i++) {
+                 int score1 = (int)(Double.parseDouble(strings[i])*10);
+                System.out.print(score1/10+"."+score1%10+" ");
+                sum += score1;
+            }
+            System.out.println(sum/10+"."+sum%10);
+        }
+    }
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /*
