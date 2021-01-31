@@ -16,19 +16,651 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+题目：
+有一个XxY的网格，一个机器人只能走格点且只能向右或向下走，要从左上角走到右下角。请设计一个算法，计算机器人有多少种走法。
+给定两个正整数int x,int y，请返回机器人的走法数目。保证x＋y小于等于12。
+
+测试样例：2,2
+返回：2
+
+ */
+public class Code02 {
+    public int countWays(int x, int y) {
+        // write code here
+        int dp[][] = new int[x][y];
+        for(int i = 0; i < x; i++){
+            dp[i][0] = 1;
+        }
+        for(int j =0; j< y; j++){
+            dp[0][j] = 1;
+        }
+        for(int i = 1; i< x;i++){
+            for(int j =1;j<y;j++){
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        return dp[x-1][y-1];
+    }
+    public static void main(String[] args) {
+        Code02 robaot = new Code02();
+        Scanner in = new Scanner(System.in);
+        int x = in.nextInt();
+        int y = in.nextInt();
+        if (x+y < 12) {
+            System.out.println(robaot.countWays(x,y));
+        }else {
+            System.out.println("输入不合法");
+        }
+    }
+
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+Fibonacci数列是这样定义的：
+F[0] = 0
+F[1] = 1
+for each i ≥ 2: F[i] = F[i-1] + F[i-2]
+因此，Fibonacci数列就形如：0, 1, 1, 2, 3, 5, 8, 13, ...，
+在Fibonacci数列中的数我们称为Fibonacci数。给你一个N，你想让其变为一个Fibonacci数，每一步你可以把当前数字X变为X-1或者X+1，
+现在给你一个数N求最少需要多少步可以变为Fibonacci数。
+
+输入描述:
+
+输入为一个正整数N(1 ≤ N ≤ 1,000,000)
+输出描述:
+
+输出一个最小的步数变为Fibonacci数"
+
+思路：
+如果斐波那契数列中的一个数比当前数要大，则开始计算数列中的当前数和前一个数，哪一个数更近，则算出步数。
+循环生成斐波那契数，当生成第一个比n大的斐波那契数时(所以,需要和f2进行比较)，
+此时离n最近的两个斐波那契数为最新生成的两个斐波那契数，测试它们，返回与n之间的最小距离
+ */
+public class Code01 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int n = input.nextInt();
+        int f1 = 0;
+        int f2 = 1;
+        int f3 = 0;//初始化f3为0
+
+        //当f2大于n时，这说明n左右两个最近的斐波那契数即为f1和f2,求得f1到n的距离和f2到n的距离，二者谁最小谁就是最小步数
+        //若循环终止条件变成f1<n，则n右边的斐波那契数为f1，n左边的斐波那契数无从得知
+        //若循环终止条件变成f3<n, 则多计算了
+        while (f2 < n) {
+            f3 = f1+f2;
+            f1 = f2;
+            f2 = f3;
+        }
+        if (Math.abs(f1-n) > Math.abs(f2-n)) {
+            System.out.println(Math.abs(f2-n));
+        }else {
+            System.out.println(Math.abs(f1-n));
+        }
+    }
+
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//输入一个整数，将这个整数以字符串的形式逆序输出，程序不考虑负数的情况
+//若数字含有0，则逆序形式也含有0，如输入10，则输出为001
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int i = in.nextInt();
+
+        //整型数据转换为字符串类型
+        String str = String.valueOf(i);
+
+        //创建一个和字符串长度一样的字符数组
+        char[] data = new char[str.length()];
+        int k = 0;
+        //将字符串中的内容逆置
+        for (int j = str.length()-1;j>=0;j--) {
+            data[k++] = str.charAt(j);
+        }
+        System.out.println(new String(data));
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+//输入一个正整数n，求n！末尾有多少个0？比如：n=10;n!=32628800,输出为2
+public class code {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        Long n = input.nextLong();
+        Long ret = 1l;
+        for (int i = 1; i<=n;i++) {
+             ret *= i;
+        }
+//        System.out.println(ret);
+        int count = 0;
+        while (ret%10 == 0){
+            ret /= 10;
+            count++;
+        }
+        System.out.println(count);
+    }
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//TopK问题：找出n个数里最小的k个
+public class code02 {
+    public static void main1(String[] args) {
+        int[] arr = {3,9,6,8,-10,7,-11,19,30,12,23};
+        int k = 5;
+        int[] ret = new int[100];
+        ret = smallestK(arr,k);
+        System.out.println(Arrays.toString(ret));
+    }
+
+    private static int[] smallestK(int[] arr , int k) {
+        //检查数组是否为空，或者k是否小于等于0
+        if (arr == null||k <= 0 ) {
+            return null;
+        }
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(arr.length);
+        //将数组中的元素放到优先级队列里面
+        for (int i = 0; i < arr.length; i++) {
+            priorityQueue.add(arr[i]);
+        }
+        //检查优先级队列里面的顺序
+//        for (int i = 0; i < arr.length;i++) {
+//            System.out.println(priorityQueue.poll()+" ");
+//        }
+        //将优先级队列里面的前k个数弹出存到一个结果数组中
+        int[] ret = new int[k];
+        for (int i = 0 ; i < priorityQueue.size();i++) {
+            ret[i] = priorityQueue.poll();
+        }
+        return ret;
+    }
+
+    public static void main2(String[] args) {
+        Scanner in  = new Scanner(System.in);
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        while (in.hasNextInt()) {
+            String str = in.nextLine();
+            String[] strings = str.split(" ");
+            int k = Integer.parseInt(strings[strings.length-1]);
+            for (int i = 0; i<strings.length-1;i++) {
+                int e = Integer.parseInt(strings[i]);
+                priorityQueue.add(e);
+            }
+            int[] ret = new int[k];
+            for (int i = 0 ;i < k; i++){
+                ret[i] = priorityQueue.poll();
+            }
+            System.out.println(Arrays.toString(ret));
+        }
+    }
+
+    public static void main11(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        List<Integer> list = new ArrayList<Integer>();
+        while(scanner.hasNextInt()) {
+            String str = scanner.nextLine();
+            String[] string = str.split(" ");
+            for (int i = 0; i < string.length; i++) {
+                int tmp = Integer.parseInt(string[i]);
+                list.add(tmp);
+            }
+            int ans = list.remove(list.size()-1);
+            list.sort(Integer::compareTo);
+            for (int i = 0; i < ans ; i++) {
+                System.out.print(list.get(i));
+                if(i < ans-1) {
+                    System.out.print(" ");
+                }
+            }
+        }
+    }
+    public static void main5(String[] args){
+        int ARRAYLENGTH = 8;  //指定数组长度
+        int a[] = new int[ARRAYLENGTH];
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入数组，并以回车结束：");
+        for(int i = 0; i < a.length; i++){
+            a[i] = sc.nextInt();
+        }
+        //直接打印数组a出来的是数组的首地址，必须用toString方法
+        System.out.println("数组a为:" + Arrays.toString(a));
+    }
+    public static void main(String[] args) {
+        Scanner scanner=new Scanner(System.in);
+        List<Integer> list=new ArrayList<>();
+        while(scanner.hasNext()){
+            list.add(scanner.nextInt());
+            if (scanner.nextInt()==-1) {
+                break;
+            }
+        }
+        int k=list.get(list.size()-1);
+        list.remove(list.size()-1);
+        int [] array=new int[list.size()];
+        for(int i=0;i<list.size();i++){
+            array[i]=list.get(i);
+        }
+        Arrays.sort(array);
+        for(int i=0;i<k-1;i++){
+            System.out.print(array[i]+" ");
+        }
+        System.out.println(array[k-1]);
+    }
+
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+输入描述:
+每组数据为一行一个整数n(小于等于1000)，为数组成员数,如果大于1000，则对a[999]进行计算。
+输出描述:
+一行输出最后一个被删掉的数的原始下标位置。
+
+思路：
+这道题使用ArrayList能够很轻松的解决，每隔两个数删除，就是删除顺序表中i=i+2的数，
+又由于循环所以要%顺序表的长度。 然后利用顺序表的特性，达到目的
+ */
+public class code01 {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = 0;
+        while (in.hasNext()) {
+            n = in.nextInt();
+            if (n > 1000) {
+                n = 999;
+            }
+            //        int n = 3;
+            int i = 0;
+            List<Integer> list = new ArrayList<>();
+            for (; i < n; i++) {
+                list.add(i);
+            }
+            while (list.size() > 1) {
+                i = (i + 2) % list.size();
+                list.remove(i);
+            }
+            System.out.println(list.get(0));
+        }
+    }
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//求a和b最小公倍数
+public class Code2 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int a = input.nextInt();
+        int b = input.nextInt();
+        int ret =getRet(a,b);
+        System.out.println(ret);
+    }
+    private static int getRet(int a,int b) {
+        int max = Math.max(a,b);
+        int x = max;
+        while (x % a != 0 || x % b != 0) {
+            x++;
+        }
+        System.out.println(x);
+        return x;
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//由题意知任意两块蛋糕的欧几里得距离不能等于2，也即有两组关系：
+// （1）x1 - x2 = 2(或-2)，y1 - y2 = 0；
+// （2）y1 - y2 = 2(或-2)，x1 - x2 = 0；
+// 可理解为若开始放蛋糕的位置为（x,y）；则对于每一行来说（x + 2, y）处不能放蛋糕；
+// 对于每一列来说（x, y + 2）处不能放蛋糕。
+public class Code1 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int w = input.nextInt();
+        int h = input.nextInt();
+        //创建的未初始化的二维数组，则其值默认为0；
+        //将不能放蛋糕的地方置为1，最后剩几个0就意味着可以放几块蛋糕
+        int[][] arr = new int[w][h];
+        int count = 0;
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (arr[i][j] == 0) {
+                    count++;
+                    //每一行不能放蛋糕的地方
+                    if ((i + 2) < w) {
+                        arr[i + 2][j] = 1;
+                    }
+                    //每一列不能放蛋糕的位置
+                    if ((j + 2) < h) {
+                        arr[i][j + 2] = 1;
+                    }
+                }
+            }
+        }
+        System.out.println(count);//这个2*2的盒子最多放4个也能跑
+    }
+    //方法二：不管是行还是列，只要有一个能够被4整除，蛋糕数就为网格总数的一半；
+    // 如果行跟列都不能被4整除，蛋糕数等于网格总数除以2，再加上1。
+    public static void main1(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int num1 = sc.nextInt();
+        int num2 = sc.nextInt();
+        int count = 0;
+        if(num1%4==0||num2%4==0) {
+            count = num1*num2/2;
+        }else{
+            count = num1*num2/2+1;
+        }
+        System.out.println(count);//这个2*2的盒子最多放三个也能跑，咋回事
+    }
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//用两个栈实现一个队列，栈为先进后出，队列为先进先出
+public class Code2 {
+    Stack<Integer> stack1 = new Stack<Integer>();//压入栈
+    Stack<Integer> stack2 = new Stack<Integer>();//弹出栈
+
+    //压栈往stack1内压
+    public void push(int node) {
+        stack1.push(node);
+    }
+
+    /*弹栈先判断2内是否为空，如果不为空，直接弹出2内栈顶元素，
+    如果为空，将1内所有元素压入2，直到1为空，最后弹出内2栈顶元素，保证队列的先进先出
+    如果栈1和栈2都为空，返回-1*/
+    public int pop() {
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.empty() ? -1 : stack2.pop();
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+标题：神奇的口袋 | 时间限制：1秒 | 内存限制：65536K
+有一个神奇的口袋，总的容积是40，用这个口袋可以变出一些物品，这些物品的总体积必须是40。John现在
+有n个想要得到的物品，每个物品的体积分别是a1，a2……an。John可以从这些物品中选择一些，如果选出的
+物体的总体积是40，那么利用这个神奇的口袋，John就可以得到这些物品。现在的问题是，John有多少种不
+同的选择物品的方式。
+输入描述：
+输入的第一行是正整数n (1 <= n <= 20)，表示不同的物品的数目。接下来的n行，每行有一个1到40之间的正
+整数，分别给出a1，a2……an的值。
+输出描述：
+输出不同的选择物品的方式的数目。
+示例1:
+输入
+3
+20
+20
+20
+输出
+3
+ */
+public class Code1 {
+    /**
+     * 本题采用的是递归的思想：
+     * 1.物品有n个，将物品逐一放入weight[]中；2.递归函数count(int s,int n):s表示物品剩余重量，n表示可选择物品个数
+     * 递归分为两步：
+     * a.从后往前装，选择后使用s-weight[n],n-1进行递归，如果有解count++；无解则返回
+     * b.当选择当前物品无解时就选择忽略当前物品，从n-1个物品进行删除递归；
+     *
+     * 总结：这道题其实是和高中的排列组合有关思想，从这道题中可以得出如果是排列组合思想
+     * 使用递归进行解题时就需要分两步，因为会有回退现象出现，所以需要在回退之后再一次进行另一条路的递归；
+     * @param s
+     * @param n
+     */
+    public static void count(int s,int n){
+        //如果刚好装满
+        if (s == 0){
+            count++;
+            return;
+        }
+        //如果s<0或者n<1则表示不成立
+        if (s < 0 || (s > 0 && n < 1)){
+            return;
+        }
+
+        //减去当前的物品用剩余的s，进行递归
+        count(s - weight[n],n - 1);
+
+        //如果当前物品这条路走不通，则跳过当前物品，直接n -1递归
+        count(s,n - 1);
+    }
+    //Right solution
+    static int[] weight;
+    static int N;
+    static int count = 0;
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        while (input.hasNext()){
+            N = input.nextInt();
+            weight = new int[N + 1];
+            for (int i = 1; i <= N;i++){
+                weight[i] = input.nextInt();
+            }
+
+            count(40,N);
+            System.out.println(count);
+        }
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+输入两个字符串，从第一个字符串中删除第二个字符串中的所有字符
+比如输入“They are students."
+删除之后的第一个字符串变成"The r stdnts."*/
+
+public class Code2 {
+    //方法一：用list
+    public static void main(String[] args) {
+        List<Character> list = new ArrayList<>();
+        String str1 = "They are students";
+        String str2 = "aeiou";
+        for (int i = 0; i < str1.length();i++ ) {
+            if (!str2.contains(str1.charAt(i) +"")) {//此处要加""，因为需要的是CharSequence类型，而不是char类型
+                list.add(str1.charAt(i));
+            }
+        }
+        for (int i = 0; i < list.size();i++) {
+            System.out.print(list.get(i));
+        }
+
+    }
+
+    //方法二：用String
+    public static void main1(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String str1 = input.nextLine();
+        String str2 = input.nextLine();
+//        String str1 = "They are students";
+//        String str2 = "aeiou";
+        String ret = null;
+        for (int i = 0; i < str2.length(); i++) {
+            ret = str1.replaceAll(String.valueOf(str2.charAt(i)), "");
+            str1 = ret;
+        }
+        System.out.println(str1);
+    }
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*小易去附近的商店买苹果，奸诈的商贩使用了捆绑交易，只提供6个每袋和8个每袋的包装(包装不可拆分)。
+可是小易现在只想购买恰好n个苹果，小易想购买尽量少的袋数方便携带。如果不能购买恰好n个苹果，小易将不会购买。*/
+
+public class Code1  {
+    public static void main(String[] args) {
+        System.out.println(method());
+    }
+    public static int method() {
+        Scanner input = new Scanner(System.in);
+        int n = input.nextInt();
+        //1.如果n小于6，或者n为奇数或者n为10，则没法购买n个苹果，return -1；
+        if (n < 6 || n%2!=0 ||n==10) {
+            return -1;
+            //2.如果n为8的整数倍，可以买n/8个苹果
+        }else if (n % 8==0) {
+            return n/8;
+            //3.如果n不是8的整数倍，又是偶数且不满足1，即可买n/8+1个苹果
+        }else {
+            return n/8 + 1;
+        }
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*对于一个字符串，请设计一个算法，判断其是否为一个合法的括号串。
+给定一个字符串A和它的长度n，请返回一个bool值代表它是否为一个合法的括号串。
+合法括号串表示字符串中全是括号,并且左右括号数量相等*/
+public class Code2 {
+    public static void main(String[] args) {
+        String a = "(()())";
+        int n = a.length();
+        System.out.println(chkParenthesis(a, n));
+    }
+    public static boolean chkParenthesis(String A, int n) {
+        Stack<Character> stack = new Stack<>();
+        //遍历字符串
+        for (int i = 0; i < n;i++) {
+            //如果字符即不为左括号又不为右括号，输出false
+            if (A.charAt(i) != '(' && A.charAt(i) != ')') {
+                return false;
+                //如果为左括号，压栈
+            }else if (A.charAt(i) == '(') {
+                stack.push(A.charAt(i));
+                //如果为右括号，判断栈内是否为空，若不为空，弹出栈内左括号，若为空，说明右括号对应不上左括号，输出false
+            }else {
+                if (!stack.empty()) {
+                    stack.pop();
+                }else {
+                    return false;
+                }
+            }
+        }
+        //遍历完成字符串，如果栈为空，说明为合法的括号串，不为空，说明左括号多了
+        if (stack.empty()) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * 题目：读入一个字符串str，输出字符串str中的连续最长的数字串
+ * 输入描述:
+ * 个测试输入包含1个测试用例，一个字符串str，长度不超过255。
+ *
+ * 输出描述:
+ * 在一行内输出str中里连续最长的数字串。
+ * 示例1
+ * 输入
+ *
+ * abcd12345ed125ss123456789
+ * 输出
+ *
+ * 123456789
+ *
+ * 思路：用两个循环判断，一个判断是否为数字开始，第二个计算长度，最后将最长的从原字符串中截取出来
+ */
+public class Code1 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String str = input.nextLine();
+        String ret = "";
+        int count = 0;
+        int index = 0;
+        for (int i = 0; i < str.length();i++) {
+            //出现第一个数字
+            if (str.charAt(i) >= '0'&& str.charAt(i) <= '9') {
+                count = 1;//先给计数器加1
+                index = i;//定位第一个数字出现的下标
+                for (int j = i ; j < str.length();j++) {
+                    if (str.charAt(j) >= '0' && str.charAt(j) <= '9') {
+                        count++;
+                        index = j;
+                    }else {
+                        break;
+                    }
+                }
+                if (count > ret.length()) {
+                    ret = str.substring(i,index+1);//substring(0,5)左闭右开，表示包含0号下标，不包含5号下标
+                }
+            }else {
+                continue;
+            }
+        }
+        System.out.println(ret);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
