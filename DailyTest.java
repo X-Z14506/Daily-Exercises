@@ -12,9 +12,197 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+    格雷码：任意两个相邻的代码只有一位二进制数不同
+        要求：编写一个函数
+             以递归的方式生成N位格雷码
+             给定一个整数n，返回n位的格雷码
+
+       测试案例：输入 1       返回["0","1"]
+
+     解题思路：任意两个相邻的代码只有一位二进制数不同，即：
+    当 n == 1 的时候，格雷码为：["0", "1"]
+    当 n == 2 的时候，格雷码为：["00", "01", "11", "10"]
+    当 n == 3 的时候，格雷码为：["000", "001", "011", "010", "110", "111", "101", "100"]
+    发现：n每次增加一，格雷码的数量就多一倍
+    要知道n=2时的格雷码，只需要知道n=1的格雷码
+    然后将1的格雷码正序一下，再倒序一下
+    然后在前面一半第一个数字前加上0
+    后面一半的第一个数字前面加上1
+
+*/
+
+public class Code2 {
+    public static void main(String[] args) {
+        for (int i = 1;i<6;i++) {
+            String[] a = getGray(i);
+            System.out.println(Arrays.toString(a));
+        }
+
+        //数组逆序法一：
+        int[] i = {1,25,78,9};
+        System.out.println(Arrays.toString(i));
+        System.out.println("===========================逆序前===================================");
+        int[] j = new int[i.length];
+        for (int a = 0;a < i.length;a++) {
+            j[a] = i[i.length-1-a];
+        }
+        System.out.println(Arrays.toString(j));
+        System.out.println("===========================逆序后=====================================");
+
+        //数组逆序法二：
+        int[] x = {1,25,9978,9};
+        System.out.println(Arrays.toString(x));
+        System.out.println("===========================逆序前===================================");
+        int[] y = new int[x.length * 2];
+        for (int a = 0;a < x.length;a++) {
+            y[a] = x[a];
+            y[y.length-1-a] = x[a];
+        }
+        System.out.println(Arrays.toString(y));
+        System.out.println("============================逆序后====================================");
+    }
+
+    //暴力解法的优化
+    public static String[] getGray(int n) {
+        if (n ==1 ){
+            return new String[] {"0","1"};
+        }
+        else{
+            String[] preArr = getGray(n-1);
+            //要算n个格雷码，先算上一个格雷码
+            String[] curArr = new String[2*preArr.length];
+            //需要上一个的二倍的长度来存当前的格雷码
+            for(int i =0; i<preArr.length; i++){
+                curArr[i] = "0"+preArr[i];
+                //在前面的一半之前加零
+                curArr[curArr.length-1-i] = "1"+preArr[i];
+                //在后面的一半之后加1
+            }
+            return curArr;
+        }
+    }
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+     交换数组0号下标和1号下标的值
+ */
+public class Code1 {
+    public static void main(String[] args) {
+        int[] a = {1,2};
+        System.out.println(Arrays.toString(a));
+        int[] b = exchangeAB(a);
+        System.out.println(Arrays.toString(b));
+    }
+    public static int[] exchangeAB(int[] AB) {
+        int temp = AB[0];
+        AB[0] = AB[1];
+        AB[1] = temp;
+        return AB;
+    }
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+给定一个数组A[0,1,...,n-1],请构建一个数组B[0,1,...,n-1],其中B中的元素B[i]=A[0]*A[1]*...*A[i-1]*A[i+1]*...*A[n-1]。不能使用除法
+ */
+public class Code2 {
+    public static int[] multiply(int[] A) {
+        int[] b = new int[A.length];
+        for (int i = 0;i < A.length;i++) {
+            int sum = 1;
+            for (int j = 0 ;j < A.length;j++) {
+                if (j == i) {
+                    continue;
+                }else {
+                    sum*=A[j];
+                }
+            }
+            System.out.println(sum);
+            b[i]=sum;
+        }
+        return b;
+    }
+
+    public static void main(String[] args) {
+        int[] a = {1,2,3,4,5};
+        int[] ret = multiply(a);
+        System.out.println(Arrays.toString(ret));
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+给定一个k位整数N = dk-1*10k-1 + ... + d1*101 + d0 (0<=di<=9, i=0,...,k-1, dk-1>0)，
+请编写程序统计每种不同的个位数字出现的次数。例如：给定N = 100311，则有2个0，3个1，和1个3。
+
+输入格式：
+
+每个输入包含1个测试用例，即一个不超过1000位的正整数N。
+
+输出格式：
+
+对N中每一种不同的个位数字，以D:M的格式在一行中输出该位数字D及其在N中出现的次数M。要求按D的升序输出。
+
+输入样例：
+100311
+输出样例：
+0:2
+1:3
+3:1
+ */
+
+public class Code1 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String str = input.nextLine();
+
+        //此处用TreeMap因为TreeMap是自动排好序的，而HashMap是无序的
+        TreeMap<Character,Integer> tree = new TreeMap<>();
+
+
+        for (int i = 0;i<str.length();i++) {
+            char ch = str.charAt(i);
+            if (ch <= '9'&& ch >= '0') {
+                if (!tree.containsKey(ch)) {
+
+                    //new Integer和Integer.valueOf区别：
+                    //new Integer(127)：每次调用得到一个新对象
+                    //Integer.valueOf：每次调用先看缓存池里有没有该值，有的话返回该缓存池里的内容，没有的话返回的是一个新的Integer对象，
+                    tree.put(ch,new Integer(1));
+                }else {
+                    tree.put(ch,(Integer)tree.get(ch)+1);
+                }
+            }
+        }
+
+        String string = "0123456789";
+        char[] ch1 = string.toCharArray();
+        for (char e : ch1) {
+            if (tree.containsKey(e)) {
+                System.out.println(e +":"+ tree.get(e));
+            }
+        }
+    }
+
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -2818,1640 +3006,4 @@ public class Main14 {
         }
 
         //Arrays.copyOfRange()是左闭右开的
-        root.left = reConstructBinaryTree(
-                Arrays.copyOfRange(pre,1,rootIndex+1),
-                Arrays.copyOfRange(in,0,rootIndex));
-        root.right = reConstructBinaryTree(
-                Arrays.copyOfRange(pre,rootIndex+1,pre.length),
-                Arrays.copyOfRange(in,rootIndex+1,in.length));
-
-        return root;
-    }
-
-}
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-二叉搜索树的第k个节点
-二叉搜索树（二叉查找树）（二叉排序树）：
-     根节点的值大于其左子树中任意一个节点的值，小于其右节点中任意一节点的值，
-
-深度优先--栈--前中后序遍历
- */
-public class Main13 {
-    TreeNode2 KthNode(TreeNode2 pRoot, int k) {
-        if (pRoot == null || k < 1) {
-            return null;
-        }
-        Stack<TreeNode2> stack = new Stack<>();
-        //计数，每次出栈一个加一次，出栈顺序就是二叉树的节点的值的大小顺序
-        int count = 0;
-        //判断有没有遍历完
-        while (pRoot!=null || !stack.empty()) {
-            //中序遍历 左根右
-            while (pRoot!=null) {
-                stack.push(pRoot);
-                pRoot = pRoot.left;
-            }
-            //出栈顺序是按照终须遍历出的栈，即二叉树节点的大小顺序
-            pRoot = stack.pop();
-            count++;
-            if (count==k) {
-                return pRoot;
-            }
-            pRoot = pRoot.right;
-        }
-        //走到这里说明k超过了二叉树的节点个数
-        return null;
-    }
-}
-class TreeNode2 {
-    int val;
-    TreeNode2 left = null;
-    TreeNode2 right = null;
-
-    public TreeNode2(int val) {
-        this.val = val;
-    }
-}
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-平衡二叉树
- */
-public class Main12 {
-    //判断是不是平衡二叉树
-    public boolean IsBalanced_Solution(TreeNode1 root) {
-        if (root==null) {
-            return true;
-        }
-        int l = height(root.left);
-        int r = height(root.right);
-        if (Math.abs(l-r) < 1) {
-            return IsBalanced_Solution(root.left) && IsBalanced_Solution(root.right);
-        }else {
-            return false;
-        }
-    }
-
-    //求二叉树的高度
-    public int height(TreeNode1 root) {
-        if (root == null) {
-            return 1;
-        }
-        int leftHeight = height(root.left);
-        int rightHeight = height(root.right);
-        return Math.max(leftHeight,rightHeight);
-    }
-}
-class TreeNode1{
-    public int val;
-    TreeNode1 left = null;
-    TreeNode1 right = null;
-
-    public TreeNode1(int val) {
-        this.val = val;
-    }
-}
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-构建乘积数组
- */
-public class Main11 {
-    public static void main(String[] args) {
-        int[] a = {1,2,3,4,5};
-        System.out.println(Arrays.toString(multiply(a)));
-    }
-    public static int[] multiply(int[] A) {
-        int[] a = new int[A.length];
-        for (int i = 0;i < A.length;i++) {
-            a[i] = 1;
-            for (int j = 0;j < A.length;j++) {
-                if (j!=i) {
-                    a[i]*=A[j];
-                }
-            }
-        }
-        return a;
-    }
-}
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-不用加减乘除做加法
-写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
-输入：1 2
-输出：3
- */
-public class Main10 {
-    public static void main(String[] args) {
-        int a = 1;
-        int b = -2;
-        System.out.println(Add(a, b));
-        System.out.println(Add2(a,b));
-    }
-    public static int Add(int num1,int num2) {
-        if (num2>=0) {
-            for (int i = num2;i>0;i--) {
-                num1++;
-            }
-        }else {
-            for (int i = num2;i<0;i++) {
-                num1--;
-            }
-        }
-        return num1;
-    }
-
-    //法二：二进制位运算
-   /* 首先看十进制是如何做的： 5+7=12，三步走
-    第一步：相加各位的值，不算进位，得到2。
-    第二步：计算进位值，得到10. 如果这一步的进位值为0，那么第一步得到的值就是最终结果。
-
-    第三步：重复上述两步，只是相加的值变成上述两步的得到的结果2和10，得到12。
-
-    同样我们可以用三步走的方式计算二进制值相加： 5-101，7-111 第一步：相加各位的值，不算进位，得到010，二进制每位相加就相当于各位做异或操作，101^111。
-
-    第二步：计算进位值，得到1010，相当于各位做与操作得到101，再向左移一位得到1010，(101&111)<<1。
-
-    第三步重复上述两步， 各位相加 010^1010=1000，进位值为100=(010&1010)<<1。
-    继续重复上述两步：1000^100 = 1100，进位值为0，跳出循环，1100为最终结果。*/
-    public static int Add2(int num1,int num2) {
-        while (num2!=0) {
-            int temp = num1^num2;
-            num2 = (num1&num2)<<1;
-            num1 = temp;
-        }
-        return num1;
-    }
-}
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-题目描述
-在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,
-并返回它的位置, 如果没有则返回 -1（需要区分大小写）.（从0开始计数）
-
-输入："google"
-输出：4
- */
-public class Main09 {
-
-    public static void main(String[] args) {
-        String s = "google";
-        System.out.println(FirstNotRepeatingChar(s));
-        System.out.println(solution(s));
-        System.out.println(FirstNotRepeatingChar3(s));
-    }
-    public static int FirstNotRepeatingChar(String str) {
-
-        for (int i = 0;i < str.length();i++) {
-           char temp = str.charAt(i);
-            int count = 0;
-           for (int j = 0;j <str.length();j++) {
-               if (str.charAt(j) == temp) {
-                   count++;
-               }
-           }
-           if (count == 1) {
-               return i;
-           }
-        }
-        return -1;
-    }
-
-    //方法二：其实主要还是hash，利用每个字母的ASCII码作hash来作为数组的index。
-    // 首先用一个58长度的数组来存储每个字母出现的次数，
-    // 为什么是58呢，主要是由于A-Z对应的ASCII码为65-90，a-z对应的ASCII码值为97-122，
-    // 而每个字母的index=int(word)-65，比如g=103-65=38，
-    // 而数组中具体记录的内容是该字母出现的次数，最终遍历一遍字符串，
-    // 找出第一个数组内容为1的字母就可以了，时间复杂度为O(n)
-    public static int solution(String str){
-        int[] words = new int[58];
-        for(int i = 0;i<str.length();i++){
-            //此处可以不用加强转，因为英文字符可以自动转换为int
-            words[(str.charAt(i))-65] += 1;
-        }
-        for(int i=0;i<str.length();i++){
-            if(words[((int)str.charAt(i))-65]==1)
-                return i;
-        }
-        return -1;
-    }
-
-    //方法三：
-    public static int FirstNotRepeatingChar3(String str) {
-        if(str==null)return -1;
-        if(str.length()==0)return -1;
-        char[] ch=str.toCharArray();
-        int pos=-1;
-        int i=0,j=0;
-        for(i=0;i<ch.length;i++){
-            for(j=0;j<ch.length;j++){
-                if((ch[i]==ch[j])&&(i!=j))break;
-            }
-            if(j==ch.length){
-                pos=i;
-                break;
-            }
-        }
-        return pos;
-    }
-}
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-/*
-合并两个有序的链表
- */
-
-public class Main8 {
-    public ListNode Merge(ListNode list1,ListNode list2) {
-        //合并后的新链表的头结点
-        ListNode listNode = new ListNode(-1);
-        ListNode cur = listNode;//遍历用的节点
-        while (list1!=null && list2!=null) {
-            if (list1.val > list2.val) {
-                cur.next = list2;
-                cur = cur.next;
-                list2 = list2.next;
-            }else {
-                cur.next = list1;
-                cur = cur.next;
-                list1 = list1.next;
-            }
-        }
-        //退出循环说明至少有一个链表已经全部遍历完了，因为两个链表都是升序，
-        //所以剩下的未遍历的都是大于新链表的最后一个节点的
-        if (list1!=null) {
-            cur.next = list1;
-        }else {
-            cur.next = list2;
-        }
-        return listNode.next;
-    }
-}
-class ListNode {
-    int val;
-    ListNode next = null;
-
-    ListNode(int val) {
-        this.val = val;
-    }
-}
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-二叉树的深度
- */
-public class Main07 {
-    //递归
-    public int TreeDepth(TreeNode root) {
-        if (root == null) {
-            return 0;
-        }
-        return Math.max(TreeDepth(root.left),TreeDepth(root.right))+1;
-    }
-
-    //非递归，每遍历一层就加一
-    public int TreeDepth2(TreeNode root) {
-        if(root==null) return 0;
-        ArrayList<TreeNode> arr=new ArrayList<>();
-        arr.add(root);
-        int count=0;
-        while(arr.size()!=0){
-            count++;
-            for(int i=0; i<arr.size(); i++){
-                TreeNode temp=arr.remove(0);
-                if(temp.left!=null)
-                    arr.add(temp.left);
-                if(temp.right!=null)
-                    arr.add(temp.right);
-            }
-        }
-        return count;
-    }
-
-    public int TreeDepth3(TreeNode pRoot)
-    {
-        if(pRoot == null){
-            return 0;
-        }
-        Queue<TreeNode> queue = new LinkedList<TreeNode>();
-        queue.add(pRoot);
-        int depth = 0, count = 0, nextCount = 1;
-        while(queue.size()!=0){
-            TreeNode top = queue.poll();
-            count++;
-            if(top.left != null){
-                queue.add(top.left);
-            }
-            if(top.right != null){
-                queue.add(top.right);
-            }
-            if(count == nextCount){
-                nextCount = queue.size();
-                count = 0;
-                depth++;
-            }
-        }
-        return depth;
-    }
-}
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-  操作给定的二叉树，将其变换为源二叉树的镜像。
- */
-    
-public class Main06 {
-    //先前序遍历这棵树的每个结点，如果遍历到的结点有子结点，就交换它的两个子节点，
-    //当交换完所有的非叶子结点的左右子结点之后，就得到了树的镜像
-    public void Mirror(TreeNode root) {
-        if (root == null || (root.left == null && root.right == null)) {
-            return;
-        }
-        // 交换左右子树
-        TreeNode temp = root.left;
-        root.left = root.right;
-        root.right = temp;
-
-        Mirror(root.left);
-        Mirror(root.right);
-
-    }
-}
-class TreeNode {
-
-    int val = 0;
-    TreeNode left = null;
-    TreeNode right = null;
-
-    public TreeNode(int val) {
-        this.val = val;
-    }
-}
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
-输入一个  非递减排序(原数组后一个元素>=前一个元素)的数组的一个旋转，输出旋转数组的最小元素。
-NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
-
-输入：[3,4,5,1,2]
-输出：1
-
- */
-    //二分查找,原数组后一个元素>=前一个元素
-    //这里我们把target 看作是右端点，来进行分析，那就要分析以下三种情况，看是否可以达到上述的目标。
-    //
-    //情况1，arr[mid] > target：4 5 6 1 2 3
-    //     arr[mid] 为 6， target为右端点 3， arr[mid] > target, 说明[first ... mid] 都是 >= target 的，
-    //     因为原始数组是非递减，所以可以确定答案为 [mid+1...last]区间,所以 first = mid + 1
-    //情况2，arr[mid] < target:5 6 1 2 3 4
-    //      arr[mid] 为 1， target为右端点 4， arr[mid] < target, 说明答案肯定不在[mid+1...last]，
-    //      但是arr[mid] 有可能是答案,所以答案在[first, mid]区间，所以last = mid;
-    //情况3，arr[mid] == target:
-    //      如果是 1 0 1 1 1， arr[mid] = target = 1, 显然答案在左边
-    //      如果是 1 1 1 0 1, arr[mid] = target = 1, 显然答案在右边
-    //      所以这种情况，不能确定答案在左边还是右边，那么就让last = last - 1;慢慢缩少区间，同时也不会错过答案。
-public class Main05 {
-    public static void main(String[] args) {
-        int[] a = {6501,6828,6963,7036,7422,7674,8146,8468,8704,8717,9170,9359,9719,9895,
-                9896,9913,9962,154,293,334,492,1323,1479,1539,1727,1870,1943,2383,2392,2996,
-                3282,3812,3903,4465,4605,4665,4772,4828,5142,5437,5448,5668,5706,5725,6300,6335};
-        System.out.println(minNumberInRotateArray(a));
-    }
-    public static int minNumberInRotateArray(int [] array) {
-        /*int start=0;
-        int end=array.length-1;
-        while(start<=end)
-        {
-            int mid=(start+end)/2;
-            if(end-start==1)
-                return array[end];
-            if(array[mid]>=array[start])
-                start=mid;
-            if(array[mid]<=array[end])
-                end=mid;
-        }
-        return -1;*/
-
-        //若数组大小为0，返回0。
-        if(array.length==0) {
-            return 0;
-        }
-        int start = 0;
-        int last = array.length-1;
-        //// 最后剩下一个元素，即为答案
-        while (start<last) {
-            //每次进入循环，start或last会变化，因此mid也会变化
-            int mid = (start+last)/2;
-            //因为原数组是非递减的，旋转后如果第一个元素<=最后一个元素，则第一个元素一定是最小的
-            if (array[start] <= array[last]) {
-                return array[start];
-            }else if (array[mid] < array[last]) {
-                last = mid;
-            }else if (array[mid] > array[last]) {
-                start = mid+1;
-            }else {
-                --last;
-            }
-       }
-        return array[last];
-    }
-}
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
- */
-
-// push操作就直接往stack1中push，
-// pop操作需要分类一下：如果stack2为空，那么需要将stack1中的数据全部转移到stack2中，然后在对stack2进行pop，如果stack2不为空，直接pop就ok。
-public class Main04 {
-    //模拟入队列的栈
-    Stack<Integer> stack1 = new Stack<Integer>();
-    //模拟出队列的栈
-    Stack<Integer> stack2 = new Stack<Integer>();
-
-    public void push(int node) {
-        stack1.add(node);
-    }
-
-    public int pop() {
-        //如果stack2为空，那么需要将stack1中的数据全部转移到stack2中，然后在对stack2栈顶元素弹出
-        if (stack2.empty()) {
-            while (!stack1.empty()) {
-                int temp = stack1.pop();
-                stack2.push(temp);
-            }
-        }
-        //如果stack2不为空，直接将stack2的栈顶元素弹出
-        return stack2.pop();
-    }
-}
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-变态跳台阶
-一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
- */
-
-//每个台阶都有跳与不跳两种情况（除了最后一个台阶），最后一个台阶必须跳。所以共用2^(n-1)中情况
-public class Main03 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-            int n = sc.nextInt();
-            System.out.println(JumpFloorII(n));
-        }
-    }
-    public static int JumpFloorII(int target) {
-        return (int)Math.pow(2,target-1);
-    }
-}
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-青蛙跳台阶
-一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
-
- */
-public class Main02 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-            int n = sc.nextInt();
-            System.out.println(JumpFloor(n));
-            System.out.println(JumpFloor2(n));
-        }
-    }
-
-    private static int JumpFloor2(int target) {
-        if (target <= 3 ) {
-            return target;
-        }
-        int temp = 0;
-        int fib1 = 2;
-        int fib2 = 3;
-        for (int i = 3;i < target;i++) {
-            temp = fib1+fib2;
-            fib1 = fib2;
-            fib2 = temp;
-        }
-        return temp;
-    }
-
-    public static int JumpFloor(int target) {
-        if (target <= 3) {
-            return target;
-        }
-        return JumpFloor(target-1)+JumpFloor(target-2);
-    }
-
-}
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-斐波那契数列
- */
-public class Main01 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-            int n = sc.nextInt();
-            //方法一：
-            System.out.println(Fibonacci(n));
-            //方法二：
-            System.out.println(Fib(n));
-        }
-    }
-    //方法一：递归
-    public static int Fibonacci(int n) {
-        if (n == 0) {
-            return 0;
-        }
-        if (n <= 2 && n > 0) {
-            return 1;
-        }
-        return Fibonacci(n-1)+Fibonacci(n-2);
-
-    }
-    //方法二：循环,比递归效率高
-    public static int Fib(int n) {
-        if (n <= 2) {
-            return 1;
-        }
-        int temp = 0;
-        int fib1 = 1;
-        int fib2 = 1;
-        for (int i = 2;i < n;i++) {
-            temp = fib1+fib2;
-            fib1 = fib2;
-            fib2 = temp;
-        }
-        return fib2;
-    }
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-简单错误记录
-
-思路：此题中，对于两个文件，如果文件名相同（不用管目录，只看最后的文件名），行号相同，就认为使用一个文件
-     如果输入的文件中，有这样相同的文件，就在出现的次数那里加一，如果输入的文件之前没有输入过，则添加新文件
-
-     首先，先定义一个类，用来表示错误信息，其中包括文件名，行号，次数，具体结构
- */
-
-public class Main2 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        List<ErrorFile> list = new ArrayList<>();
-        while (sc.hasNext()) {
-            ErrorFile errorFile = new ErrorFile();
-            String[] lines = sc.nextLine().split(" ");//将输入的每一行按空格拆分，0号下标存储的文件路径/文件名，1号下标存储的是行号
-            String name = lines[0];//取得文件名
-            int index = name.lastIndexOf('\\');//扎到最后一个\的下标位置，从而获取文件名
-            errorFile.fileName = index<0 ? name : name.substring(index+1);//获取文件名,如果index<0，说明name中没有\，则name就是文件名，否则文件名是name的子串
-            errorFile.lineNum = Integer.parseInt(lines[1]);//获取行号
-
-            boolean flag = true;//设置一个标志位
-
-            //遍历list，如果文件名和行号都相同的话，count加一次，flag置为false
-            for (ErrorFile ef : list) {
-                if (ef.fileName.equals(errorFile.fileName) && ef.lineNum == errorFile.lineNum) {
-                    errorFile.count++;
-                    flag = false;
-                }
-            }
-            //如果flag还是true，说明list中没有这个错误信息，则将该错误信息添加到list内
-            if (flag) {
-                list.add(errorFile);
-            }
-        }
-        sc.close();//输入结束之后，关闭
-        //传入一个比较器，对其进行排序
-        Collections.sort(list, new Comparator<ErrorFile>() {
-            @Override
-            public int compare(ErrorFile o1, ErrorFile o2) {
-                //return (o1.count-o2.count)*(-1); //降序输出，所以乘-1
-                return (o2.count-o1.count);
-            }
-        });
-
-        //遍历排好序的list，如果错误信息不够八个，全部输出，如果超出八个，输出前八个
-        for (int i = 0;i < (list.size()>8 ? 8 : list.size());i++) {
-            ErrorFile er = list.get(i);//获取错误信息
-            String name = er.fileName;//获取文件名
-            String fileName = name.length()>16 ? name.substring(name.length()-16) : name;//如果文件名大于16输出后16为，如果小于等于16，全部输出
-            int lineNum = er.lineNum;//获取行号
-            int count = er.count; //获取错误信息出现次数
-            System.out.println(name+" "+lineNum+" "+count);
-        }
-
-    }
-}
-
-//定义一个类，来描述错误文件的信息
-class  ErrorFile {
-    //文件名
-    String fileName;
-    //行号
-    int lineNum;
-    //一个错误出现的次数计数 ：次数默认是1，因为一旦输入一个文件，他就出现了一次，当有重复文件出现的时候，给次数加1
-    int count = 1;
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-说反话
- */
-public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String[] s = sc.nextLine().split(" ");
-        reverse(s);
-    }
-    public static void reverse(String[] strings) {
-        List<String> list = new ArrayList<String>();
-        for (int i = 0;i < strings.length;i++) {
-            list.add(strings[i]);
-        }
-
-        int e = list.size()-1;
-        int b = 0;
-        for (int i = e;i >= 0;i--) {
-            strings[b++] = list.get(i);
-        }
-
-        for (String s : strings) {
-            System.out.print(s+" ");
-        }
-
-    }
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-public class Test08 {
-    public static void main(String[] args) throws InterruptedException {
-        final Object obj = new Object();
-        Thread t1 = new Thread() {
-            public void run() {
-                synchronized (obj) {
-                    try {
-                        obj.wait();
-                        System.out.println("Thread 1 wake up.");
-                    } catch (InterruptedException e) {
-                    }
-                }
-            }
-        };
-        t1.start();
-        Thread.sleep(1000);
-        Thread t2 = new Thread() {
-            public void run() {
-                synchronized (obj) {
-                    obj.notifyAll();
-                    System.out.println("Thread 2 sent notify");
-                }
-            }
-        };
-        t2.start();
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-大整数排序 TODO ：IDEA可以跑，牛客不通过
- */
-public class Main2 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        List<String> list = new ArrayList<>();
-        while (sc.hasNext()) {
-            int n = sc.nextInt();
-            sc.nextLine();
-            for (int i = 0;i < n;i++) {
-                String s = sc.nextLine();
-                list.add(s);
-            }
-            //对list内容进行大小排序
-            sort(list);
-            //输出list
-            for (String s : list) {
-                System.out.println(s);
-            }
-        }
-    }
-
-    public static void sort(List<String> list) {
-        for (int i = 0;i < list.size()-1;i++) {
-            String s1 = list.get(i);
-            for (int j = i+1;j < list.size();j++) {
-                String s2 = list.get(j);
-                if (s1.length()>s2.length()) {
-                    //交换list的i下标和j下标的内容
-                    swap(list,i,j);
-                }else if (s1.length()==s2.length()) {
-                    for (int k = 0;k < s1.length();k++) {
-                        if (s1.charAt(k) > s2.charAt(k)) {
-                            swap(list,i,j);
-                        }
-                    }
-                }
-            }
-        }
-        //System.out.println(list);
-    }
-
-    public static List<String> swap(List<String> list,int i,int j) {
-        String s1 = list.get(i);
-        String s2 = list.get(j);
-        String temp = s1;
-        list.set(i,s2);
-        list.set(j,temp);
-        return list;
-    }
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-年会抽奖
- */
-    //TODO
-public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-            int n = sc.nextInt();
-            sc.nextLine();
-            if (n==1){
-                System.out.println("100.00%");
-            }
-            if (n==2) {
-                System.out.println("50.00%");
-            }
-            if (n>2) {
-                 double noPrize = Math.pow(n-1,n-2);
-                 int sum = 1;
-                 for (int i =1;i <= n;i++) {
-                     sum*=i;
-                 }
-                 double ret = (noPrize/sum)*100;
-                System.out.println(String.format("%.2f",ret)+"%");
-            }
-        }
-    }
-}
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-密码验证合格程序
- */
-
-public class Main2 {
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-            String s = sc.nextLine();
-            boolean ret = CodeIsOk(s);
-            if (ret) {
-                System.out.println("OK");
-            }else {
-                System.out.println("NG");
-            }
-        }
-    }
-
-    //判断密码是否合格
-    public static boolean CodeIsOk(String s) {
-        boolean b = true;
-        //先判断长度
-        if (s.length() <= 8) {
-            b = false;
-            return b;
-        }
-        //在判断符号数
-        boolean b1 = CodeIsOk2(s);
-        if (!b1) {
-            b = false;
-            return b;
-        }
-        //最后判断不能有相同长度超过2的子串重复
-        boolean b2 = CodeIsOk3(s);
-        if (!b2) {
-            b = false;
-            return b;
-        }
-        return b;
-    }
-
-    //判断是否存在三种以上的符号
-    public static boolean CodeIsOk2(String s) {
-        int len = s.length();
-        int[] ints = new int[4];
-        for (int i = 0;i < len;i++) {
-            char c = s.charAt(i);
-            if (c>='0' && c<='9') {
-                ints[0]++;
-            }else if (c>='a' && c<='z') {
-                ints[1]++;
-            }else if (c>='A' && c<='Z') {
-                ints[2]++;
-            }else {
-                ints[3]++;
-            }
-        }
-        int count = 0;
-        for (int i : ints) {
-            if (i == 0){
-                count++;
-            }
-        }
-        return count <= 1;
-    }
-
-    //不能有相同长度超过2的子串重复，最小的为长度为3的重复子串，
-    // 若长度为4的重复子串，则长度为3的子串也包含在里面，所以只需要找长度为3的子串即可
-    private static boolean CodeIsOk3(String s) {
-        //遍历整个密码串
-        for (int i = 0;i < s.length()-3;i++) {
-            //从前向后找子串
-            String s1 = s.substring(i,i+3);
-            String otherString = s.substring(i+3,s.length()-1);
-            if (otherString.contains(s1)) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-守形数
- */
-public class Main1 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-            String s = sc.nextLine();
-            int len = s.length();
-            int n = Integer.parseInt(s);
-            int n2 = n*n;
-            String s1 = String.valueOf(n2);
-            String ret = "";
-            for (int i=s1.length()-len;i < s1.length();i++) {
-                ret = ret + s1.charAt(i);
-            }
-            //System.out.println(ret);
-            if (s.equals(ret)) {
-                System.out.println("YES!");
-            }else {
-                System.out.println("NO!");
-            }
-        }
-    }
-}
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-整数与IP地址间的转换
- */
-    //TODO 存在数组越界问题待解决
-public class Main2 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-            String s = sc.nextLine();
-            //输入的是IP地址
-            if (s.contains(".")) {
-                IPToInt(s);
-            }else {//输入的是整数
-                IntToIP(s);
-            }
-       }
-    }
-
-    public static void IPToInt(String s) {
-        String[] strings = s.split("\\.");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0;i < strings.length;i++) {
-            int e = Integer.parseInt(strings[i]);
-            String str = Integer.toBinaryString(e);
-            //所有二进制补全成八位
-            while (str.length() < 8) {
-                str="0"+str;
-            }
-            sb.append(str);
-        }
-        System.out.println(Integer.parseInt(sb.toString(),2));
-    }
-
-    public static void IntToIP(String s) {
-        //1.先将十进制转换为二进制
-        String s1 = Integer.toBinaryString(Integer.parseInt(s));
-        //2.补0
-        while (s1.length() < 32) {
-            s1="0"+s1;
-        }
-        //3.存进数组
-        String[] strings = new String[4];
-        int [] ints = new int[4];
-        int count = 0;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0;i < 4;i++) {
-            strings[i] = s1.substring(count,count+8);
-            ints[i] = Integer.parseInt(strings[i],2);
-            sb.append(ints[i]+".");
-            count+=8;
-        }
-        sb.deleteCharAt(sb.length()-1);
-        System.out.println(sb);
-    }
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-找x
- */
-public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        sc.nextLine();
-        String[] strings = sc.nextLine().split(" ");
-        int x = Integer.parseInt(sc.nextLine());
-        for (int i =0;i < strings.length;i++) {
-            int e = Integer.parseInt(strings[i]);
-            if (e == x) {
-                System.out.println(i);
-                return;
-            }
-        }
-        System.out.println(-1);
-    }
-}
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-记票统计
- */
-public class Main02 {
-    public static void main(String[] args) {
-        Map<Character,Integer> map = new HashMap<Character,Integer>();
-        Scanner scanner = new Scanner(System.in);
-        //int votePerson = Integer.parseInt(scanner.nextLine());
-        while (scanner.hasNext()) {
-            //候选人人数
-            int votePerson = scanner.nextInt();
-            scanner.nextLine();
-            //候选人名字
-            char[] chars1 = scanner.nextLine().toCharArray();
-            //投票人人数
-            int candidatePerson = scanner.nextInt();
-            scanner.nextLine();
-            //投票人投的票
-            char[] chars2 = scanner.nextLine().toCharArray();
-
-            //将候选人名字放入map,i=i+2,因为每两个候选人名字中间有空格字符
-            for (int i = 0;i < chars1.length;i=i+2) {
-                map.put(chars1[i],0);
-            }
-
-            int Invalid = 0;
-
-            //读取投票人的投票
-            for (int i = 0;i < chars2.length;i=i+2) {
-                if (map.containsKey(chars2[i])) {
-                    map.put(chars2[i],map.get(chars2[i])+1);
-                }else {
-                    Invalid++;
-                }
-            }
-            //输出
-            for (Map.Entry<Character,Integer> me : map.entrySet()) {
-                System.out.println(me.getKey()+" : "+me.getValue());
-            }
-            System.out.println("Invalid : "+Invalid);
-        }
-
-    }
-}
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-数字之和
- */
-public class Main {
-
-  /*  public static void main(String[] args) {
-        String s = "123";
-        String[] strings = s.split("");
-        System.out.println(strings.length);
-        System.out.println(Arrays.toString(strings));
-        char c = 'a';
-        System.out.println(s.charAt(0));
-    }*/
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-            long n = Integer.parseInt(sc.nextLine());
-            int ret1 = count(n);
-            long n2 = n*n;
-            int ret2 = count(n2);
-            System.out.println(ret1+" "+ret2);
-        }
-    }
-
-    //计算n的各位数字之和
-    public static int count(long n) {
-        String s = String.valueOf(n);
-        int sum = 0;
-        String[] strings = s.split("");
-        for (int i = 0;i < strings.length;i++) {
-            sum += Integer.parseInt(strings[i]);
-        }
-        return sum;
-    }
-
-
-}
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-学分绩点
-
-输入：
-5
-4 3 4 2 3
-91 88 72 69 56
-
-输出：
-2.52
- */
-public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = Integer.parseInt(sc.nextLine());
-        String[] strings1 = sc.nextLine().split(" ");
-        String[] strings2 = sc.nextLine().split(" ");
-        //所有课程学分之和
-        double scoreSum = 0;
-        //所有学科绩点之和
-        double scorePointSum = 0;
-        for (int i = 0;i < n;i++) {
-            scoreSum += Integer.parseInt(strings1[i]);
-            scorePointSum += scorePoint(Integer.parseInt(strings2[i])) * Integer.parseInt(strings1[i]);
-        }
-        double ret = scorePointSum/scoreSum;
-        System.out.println(String.format("%.2f",ret));
-    }
-
-    public static double scorePoint(int i) {
-        if (i>=90 && i<=100) {
-            return 4.0;
-        }else if (i>=85 && i<=89) {
-            return 3.7;
-        }else if (i>=82 && i<=84) {
-            return 3.3;
-        }else if (i>=78 && i<=81) {
-            return 3.0;
-        }else if (i>=75 && i<=77) {
-            return 2.7;
-        }else if (i>=72 && i<=74) {
-            return 2.3;
-        }else if (i>=68 && i<=71) {
-            return 2.0;
-        }else if (i>=64 && i<=67) {
-            return 1.5;
-        }else if (i>=60 && i<=63) {
-            return 1.0;
-        }
-        return 0;
-    }
-}
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-最高分是多少
-
-输入：
-5 7
-1 2 3 4 5
-Q 1 5
-U 3 6
-Q 3 4
-Q 4 5
-U 4 5
-U 2 9
-Q 1 5
-
-输出：
-5
-6
-5
-9
-
- */
-public class Main2 {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNext()) {
-            String[] strings = scanner.nextLine().split(" ");
-            int N = Integer.parseInt(strings[0]);
-            int M = Integer.parseInt(strings[1]);
-            String[] strings2 = scanner.nextLine().split(" ");
-            int[] ints = new int[N];
-            for (int i = 0;i < N;i++) {
-                ints[i] = Integer.parseInt(strings2[i]);
-            }
-            List<Integer> list = new ArrayList<>();
-
-            for (int i = 0;i < M;i++) {
-                String[] strings1 = scanner.nextLine().split(" ");
-                if (strings1[0].charAt(0)=='Q') {
-                    int index1 = Integer.parseInt(strings1[1]);
-                    int index2 = Integer.parseInt(strings1[2]);
-                    Arrays.sort(ints,index1-1,index2-1);
-                    //query(ints,index1-1,index2-1);
-                    list.add(ints[index2-1]);
-                }else if (strings1[0].charAt(0)=='U') {
-                    int index = Integer.parseInt(strings1[1]);
-                    int num = Integer.parseInt(strings1[2]);
-                    ints[index] = num;
-                    if (i==M-2) {
-                        Arrays.sort(ints);
-                    }
-                
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-小乐乐计算求和
-小乐乐想计算一下1!+2!+3!+...+n!。
- */
-public class Main{
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        //n=1的时候，不满足第一个循环条件，返回1
-        //n>1的时候，开始加阶乘
-        int sum = 1;
-        for(int i = 2; i <= n;i++) {
-            int e = 1;
-            for(int j = 1; j <= i;j++) {
-                e*=j;
-            }
-            sum+=e;
-        }
-        System.out.println(sum);
-    }
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-/*
-题目描述
-KiKi现在得到一个包含n*m个数的整数序列，现在他需要把这n*m个数按顺序规划成一个n行m列的矩阵并输出，请你帮他完成这个任务。
-输入描述:
-一行，输入两个整数n和m，用空格分隔，第二行包含n*m个整数（范围-231~231-1）。(1≤n≤10, 1≤m≤10)
-输出描述:
-输出规划后n行m列的矩阵，每个数的后面有一个空格。
-
-输入：
-2 3
-1 2 3 4 5 6
-
-输出：
-1 2 3
-4 5 6
-
- */
-
-public class Main01 {
-    //法二：
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String[] strings = reader.readLine().split(" ");
-        int n = Integer.parseInt(strings[0]);
-        int m = Integer.parseInt(strings[1]);
-        strings = reader.readLine().split(" ");
-        int index = 0;//定义一维数组的下标
-
-        //开辟一个n*m的二维数组，将一维数组内的元素按顺序放入二维数组
-        String[][] str = new String[n][m];
-        for (int i = 0;i < n;i++) {
-            for (int j = 0;j < m;j++) {
-                str[i][j] = strings[index];
-                System.out.print(str[i][j]+" ");
-                index++;
-            }
-            System.out.println();
-        }
-    }
-
-    //法一
-    public static void main1(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String[] strings = reader.readLine().split(" ");
-        //int n = Integer.parseInt(strings[0]);
-        int m = Integer.parseInt(strings[1]);
-        String[] strings1 = reader.readLine().split(" ");
-        for (int j = 1;j <= strings1.length;j++) {
-            if (j % m == 0) {
-                System.out.print(strings1[j-1]+" ");
-                System.out.println();
-            }else {
-                System.out.print(strings1[j-1]+" ");
-            }
-        }
-
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-/*
-从n行m列的方阵队列中找到身高最高的人的位置
-
-输入：
-2 2
-175 180
-176 185
-
-输出：
-2 2
-
- */
-public class Main02 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String[] strings = reader.readLine().split(" ");
-        int n = Integer.parseInt(strings[0]);
-        int m = Integer.parseInt(strings[1]);
-        //先创建一个list按顺序存放所有人的身高值
-        List<String> list = new ArrayList<>();
-        for (int i = 0;i < n;i++) {
-            strings = reader.readLine().split(" ");
-            for (int j = 0;j < strings.length;j++) {
-                list.add(strings[j]);
-            }
-        }
-
-
-        int[] max = new int[2];
-        int maxNum = 0;
-
-        //ArrayList底层数组的下标
-        int index = 0;
-        //将list内的值按顺序存入二维数组，随后进行比较，找出最大值，最大值的下标存入一维数组
-        int[][] a = new int[n][m];
-        for (int i = 0;i < n;i++) {
-            for (int j = 0;j < m;j++) {
-                a[i][j] = Integer.parseInt(list.get(index));
-                if (a[i][j] > maxNum) {
-                    maxNum = a[i][j];
-                    max[0] = i+1;
-                    max[1] = j+1;
-                }
-                index++;
-            }
-        }
-        System.out.println(max[0]+" "+max[1]);
-
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-两个n行m列的矩阵，他想知道两个矩阵是否相等
-
-输入：
-2 2
-1 2
-3 4
-1 2
-3 4
-
-输出：
-Yes
- */
-public class Main03 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String[] strings = reader.readLine().split(" ");
-        int n = Integer.parseInt(strings[0]);
-        int m = Integer.parseInt(strings[1]);
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0;i < 2*n;i++) {
-            strings = reader.readLine().split(" ");
-            for (int j = 0;j < m;j++) {
-                list.add(Integer.parseInt(strings[j]));
-            }
-        }
-        //用两个指针遍历list并比较
-        int pre = 0;
-        int last = m*n;
-        //判断的标志
-        boolean flag = true;
-
-        for (int i = 0;i < m*n;i++) {
-            if (list.get(pre++) != list.get(last++)) {
-                flag = false;
-            }
-        }
-        if (flag) {
-            System.out.println("Yes");
-        }else {
-            System.out.println("No");
-        }
-    }
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-/*
-KiKi想知道一个n阶方矩是否为上三角矩阵，请帮他编程判定。上三角矩阵即主对角线以下的元素都为0的矩阵，主对角线为从矩阵的左上角至右下角的连线。
-
-输入：
-3
-1 2 3
-0 4 5
-0 0 6
-
-输出：
-YES
-
- */
-
-public class Main04 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(reader.readLine());
-
-        String[][] strings1 = new String[n][n];
-        for (int i = 0;i < n;i++) {
-            String[] strings = reader.readLine().split(" ");
-            for (int j = 0;j < n;j++) {
-                strings1[i][j] = strings[j];
-                if (i > j && !"0".equals(strings1[i][j])) {
-                    System.out.println("NO");
-                    break;
-                }
-            }
-        }
-        System.out.println("YES");
-    }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-矩阵的转置
-
-输入：
-2 3
-1 2 3
-4 5 6
-
-输出：
-1 4
-2 5
-3 6
-
- */
-public class Main05 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String[] strings = reader.readLine().split(" ");
-        int n = Integer.parseInt(strings[0]);
-        int m = Integer.parseInt(strings[1]);
-
-         String[][] str = new String[n][m];
-        for (int i = 0;i < n;i++) {
-            String[] strings1 = reader.readLine().split(" ");
-            for (int j = 0;j < m;j++) {
-                str[i][j] = strings1[j];
-            }
-        }
-
-        for (int i = 0;i < m;i++) {
-            for (int j = 0;j<n;j++) {
-                System.out.print(str[j][i] + " ");
-            }
-            System.out.println();
-        }
-    }
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*
-第一行包含两个整数n和m，表示一个矩阵包含n行m列
-从2到n+1行，每行输入m个整数
-接下来一行输入k，表示要执行k次操作
-接下来有k行，每行包括一个字符t和两个数a和b，t代表需要执行的操作，当t为字符'r'时代表进行行变换，当t为字符'c'时代表进行列变换，a和b为需要互换的行或列
-
-输入：
-2 2
-1 2
-3 4
-1
-r 1 2
-
-输出:
-3 4
-1 2
-
- */
-
-public class Main06 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String[] strings = reader.readLine().split(" ");
-        int n = Integer.parseInt(strings[0]);
-        int m = Integer.parseInt(strings[1]);
-        String[][] strings1 = new String[n][m];
-
-        //给二维数组赋值
-        for (int i = 0;i < n;i++) {
-            strings = reader.readLine().split(" ");
-            strings1[i] = strings;
-        }
-
-        int k = Integer.parseInt(reader.readLine());
-        while (k > 0) {
-            strings = reader.readLine().split(" ");
-            String t = strings[0];
-            int a = Integer.parseInt(strings[1]);
-            int b = Integer.parseInt(strings[2]);
-
-            //如果t为"r"，交换a行和b行
-            if ("r".equals(t)) {
-                //交换行的值
-                for (int i = 0;i < m;i++) {
-                    String temp = strings1[a-1][i];
-                    strings1[a-1][i] = strings1[b-1][i];
-                    strings1[b-1][i] = temp;
-                }
-            }
-
-            //如果twe"c"，交换a列和b列
-            if ("c".equals(t)) {
-                //交换列的值
-                for (int i = 0;i < n;i++) {
-                    String temp = strings1[i][a-1];
-                    strings1[i][a-1] = strings1[i][b-1];
-                    strings1[i][b-1] = temp;
-                }
-            }
-            k--;
-        }
-
-        //打印
-        for (int i = 0;i < n;i++) {
-            for (int j = 0;j < m;j++) {
-                System.out.print(strings1[i][j]+" ");
-            }
-            System.out.println();
-        }
-
-    }
-}
-
+        root
