@@ -2,11 +2,341 @@
 
 
 
+/*
+            题目描述：
+
+            一个百万富翁遇到一个陌生人，陌生人找他谈了一个换钱的计划。该计划如下：我每天给你10 万元，你第一天给我1 分钱，第二天2 分钱，
+            第三天4 分钱……这样交换 30 天后，百万富翁交出了多少钱？陌生人交出了多少钱？（注意一个是万元，一个是分）
+
+            输入：
+
+            该题没有输入
+
+            输出：
+
+            输出两个整数，分别代表百万富翁交出的钱和陌生人交出的钱，富翁交出的钱以万元作单位，陌生人交出的钱以分作单位。
+
+
+            分析：
+            题目要求输出富翁用万元作单位，陌生人用分作单位，但判断正好是相反的！！
+            pow函数返回的是double类型的，需要进行强制类型转换
+            (int)pow(2, 30);
+ */
+public class Main2 {
+    public static void main(String[] args) {
+        long money1 = 0;
+        long money2 = 0;
+        for (int i = 1; i <= 30; i++) {
+            money1 += 10;
+            money2 += (long)Math.pow(2,i-1);
+        }
+        System.out.println(money1+"万元"+ " " + money2+"分");//300万元 1073741823分
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+    题目描述：
+        一个DNA序列由A/C/G/T四个字母的排列组合组成。G和C的比例（定义为GC-Ratio）是序列中G和C两个字母的总的出现次数除以总的字母数目（也就是序列长度）。
+        在基因工程中，这个比例非常重要。因为高的GC-Ratio可能是基因的起始点。
+
+        给定一个很长的DNA序列，以及要求的最小子序列长度，研究人员经常会需要在其中找出GC-Ratio最高的子序列。
+        输入描述：
+        输入一个string型基因序列，和int型子串的长度。
+        输出描述：
+        找出GC比例最高的子串，如果有多个输出第一个的子串。
+
+        示例：输入AACTGTGCGACCTGA
+                5，
+             输出GCACG
+
+        思路：
+        由题可知，A+C+G+T=n。因此，求G:C最高，即求在长度为n的字符串里出现G和C次数最多的子串。
+        从输入字符串下标为0的位置开始，依次遍历n个字符，记录出现C或G的次数，
+        如果高于之前记录的最大值，则更新最大出现次数和最大子串开始的下标(i)。
+ */
+
+public class Main {
+
+    //方法一
+    public static void main1(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String str = in.nextLine();
+        int n = in.nextInt();
+        List<String> list = new ArrayList<>();
+
+        //StringBuilder sb = new StringBuilder(str);
+        //遍历基因序列，找出所有子序列
+        for (int i = 0; i < str.length() - n + 1; i++) {
+            if (str.charAt(i) == 'G' || str.charAt(i) == 'C') {
+                String s = str.substring(i, i + n);
+                list.add(s);
+            }
+        }
+        System.out.println(list);//[CTGTG, GTGCA, GCACG, CACGA, CGACC, GACCT, CCTGA]
+        int preMax = 0;
+        int preMaxIndex = 0;
+        for (int i = 0; i < list.size(); i++) {
+            String s = list.get(i);
+            int max = 0;
+            for (int j = 0; j < s.length(); j++) {
+                if (s.charAt(j) == 'G' || s.charAt(j) == 'C') {
+                    max++;
+                }
+            }
+            if (max > preMax) {
+                preMax = max;
+                preMaxIndex = i;
+            }
+        }
+        System.out.println(str.substring(preMaxIndex, preMaxIndex + n));//CTGTG
+        System.out.println(list.get(preMaxIndex));//GCACG
+    }
+
+       /* Map<String,Integer> map = new HashMap<>(list.size());
+        //遍历List，将list存的东西放入map
+        for (int i = 0; i < list.size();i++) {
+            String s = list.get(i);
+            int count = 0;
+            for (int j = 0;j < s.length();j++) {
+                if (s.charAt(j) == 'G' || s.charAt(j)=='C'){
+                    count++;
+                }
+            }
+            map.put(s,count);
+        }
+        System.out.println(map);*/
+
+        //方法二：优化后
+        public static void main(String[] args){
+            Scanner sc=new Scanner(System.in);
+            String str=sc.next();
+            int n=sc.nextInt();
+            int max=0;
+            int maxIndex=0;
+            //String res="";
+            for(int i=0;i<=str.length()-n;i++){
+                //String sub=str.substring(i,i+n);//截取子串
+                int count=0;
+                for(int j=i;j<i+n;j++){
+                    if(str.charAt(j)=='C'||str.charAt(j)=='G'){
+                        count++;
+                    }
+                    if(count>max){
+                        max=count;
+                        maxIndex=i;
+                    }
+                }
+            }
+            System.out.println(str.substring(maxIndex,maxIndex+n));
+        }
+
+
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+        题目描述
+        操作给定的二叉树，将其变换为源二叉树的镜像。
+        二叉树的镜像定义：源二叉树
+    	    8
+    	   /  \
+    	  6   10
+    	 / \  / \
+    	5  7 9 11
+    	镜像二叉树
+    	    8
+    	   /  \
+    	  10   6
+    	 / \  / \
+    	11 9 7  5
+
+    	解题思路：
+        1、找到不为空的节点。
+        2、然后交换左右节点。
+        3、递归调用此函数。
+ */
+
+public class Code2 {
+    static class TreeNode {
+        int val = 0;
+        TreeNode left = null;
+        TreeNode right = null;
+
+        public TreeNode(int val) {
+            this.val = val;
+        }
+    }
+    public void Mirror(TreeNode root) {
+        //1.如果根节点不为空并且左右子树节点不全为空，交换左右子树节点的值
+        if (root!=null&&(root.left!=null||root.right!=null)) {
+            TreeNode temp = root.left;
+            root.left = root.right;
+            root.right = temp;
+
+            //2.在分别递归左右子树，交换其左右子节点的值
+            Mirror(root.left);
+            Mirror(root.right);
+        }
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+/*
+           问题描述：
+            给定一个正整数N代表火车数量，0 <N <10，接下来输入火车入站的序列，一共N辆火车，每辆火车以数字1-9编号。序列号。
+
+            输入描述：
+
+            有多组测试用例，每一组第一行输入一个正整数N（0 <N <10），第二行包括N个正整数，范围为1到9。
+
+            输出描述：
+
+            输出以字典序从小到大排序的火车出站序列号，每个编号以空格替换，每个输出序列换行，具体见sample。
+            示例1
+            输入
+            3
+            1 2 3
+            输出
+            1 2 3
+            1 3 2
+            2 1 3
+            2 3 1
+            3 2 1
+
+            分析：
+            思路为用三个变量分别存储：
+            待进站火车
+            站中火车（用 Stack 存储）
+            已出站火车
+
+            具体实现思路：
+
+            第一种：
+            采用递归的方法，递归函数的参数为当前待进站火车、站中火车、已出站火车的值所组成的三元组，递归结束条件 是，未进站火车和站中火车均为空 ，
+            此时输出已出站火车即为所有出站的一种可能，递推关系为对于当前情况有让下 一辆火车进站或让站中的一辆火车出站两种可能，对于两种可能分别调用递归函数，即可得出问题的解。
+
+            第二种：
+            采用先对火车编号进行排列组合，计算出所有可能的出站情况。但是火车出站的情况需要满足栈的出栈顺序，所以通
+            过 火车编号的顺序 ， 排列组合的顺序 进行出栈和入栈来比较排列组合中的
+            一组顺序是否满足条件，如果满足，则该排 序就是有效的出栈顺序。
+ */
+public class Code1 {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        while(in.hasNext()){
+            //输入火车数量
+            int n = in.nextInt();
+            //输入火车编号
+            int[] A = new int[n];
+            for(int i=0;i<n;i++){
+                A[i] = in.nextInt();
+            }
+            int start = 0;
+            //计算n个火车的出站的编号的排列组合
+            ArrayList<int[]> result = new ArrayList<int[]>();
+            Permutation(A,start,n,result);
+            //出栈的结果，一个元素一个记录，例如：1 2 3 ； 1 3 2
+            Set<String> sortResult = new TreeSet<String>();
+            //循环排列组合
+            for(int[] out : result){
+                //判断是否满足出栈要求（后进先出）
+                if(isLegal(A,out,n)){
+                    //满足的组合，输入结果，每一个编号用空格分隔
+                    StringBuilder sb = new StringBuilder();
+                    for(int i=0;i<n-1;i++){
+                        sb.append(out[i]+" ");
+                    }
+                    sb.append(out[n-1]);
+                    sortResult.add(sb.toString());
+                }
+            }
+            //最后输出所有的符合出栈要求的组合
+            for(String list:sortResult){
+                System.out. println(list);
+            }
+        }
+        in.close();
+    }
+    /*in : 火车编号数组
+    out : 火车出站顺序
+    n : 火 车 数 量
+    */
+    private static boolean isLegal(int[] in,int[] out,int n){
+        //栈：存储进站的火车编号
+        LinkedList<Integer> stack = new LinkedList<Integer>();
+        int i=0; int j=0;
+        while(i<n){
+            // in 还有元素的时候都需要判断
+            if(in[i] == out[j]){
+                //相等时候就不用入栈，直接后移
+                i++;
+                j++;
+            }else{
+                if(stack.isEmpty()){
+                    //空stack 就只有入栈了
+                    stack.push(in[i]);
+                    i++;
+                }else{
+                    int top = stack.peek();
+                    // 栈顶元素相等，进行出栈
+                    if(top==out[j]){
+                        j++;
+                        stack.pop();
+                    }else if(i<n){
+                        //不相等时候入栈，说明还有待进站的车
+                        stack.push(in[i]);
+                        i++;
+                    }
+                }
+            }
+        }
+        while(!stack.isEmpty() && j<n){
+            // in 的结束后，栈中元素进程出栈序列应该和out剩余的元素相同
+            int top = stack.pop();
+            if(top == out[j]){
+                j++;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static void Permutation(int[] A,int start,int n,ArrayList<int[]> result){
+        if(start == n){
+            return;
+        }
+        if(start == n-1){
+            int[] B = A.clone();
+            result.add(B);
+            return;
+        }
+        for(int i=start;i<n;i++){
+            swap(A,start,i) ;
+            Permutation(A,start+1,n,result);
+            swap(A,start,i);
+        }
+    }
+    private static void swap(int[] A,int i,int j){
+        int t = A[i];
+        A[i] = A[j];
+        A[j] = t;
+    }
+
+}
 
 
 
