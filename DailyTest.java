@@ -5,12 +5,496 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+    问题描述：
+    本题要求读入 N 名学生的成绩，将获得某一给定分数的学生人数输出。
+
+    输入格式：
+    输入在第 1 行给出不超过 10​5​​ 的正整数 N，即学生总人数。随后一行给出 N 名学生的百分制整数成绩，中间以空格分隔。最后一行给出要查询的分数个数 K（不超过 N 的正整数），随后是 K 个分数，中间以空格分隔。
+
+    输出格式：
+    在一行中按查询顺序给出得分等于指定分数的学生人数，中间以空格分隔，但行末不得有多余空格。
+
+    输入样例：
+    10
+    60 75 90 55 75 99 82 90 75 50
+    3 75 90 88
+
+    输出样例：
+    3 2 0
+ */
+public class Main2 {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int count = 0;
+        List list = new ArrayList();
+        while (n!=0&&in.hasNext()) {
+            for (int i=0;i<n;i++) {
+                int score = in.nextInt();
+                list.add(score);
+//                list.add(" ");
+            }
+            int size = list.size();
+            int setScore = in.nextInt();
+            for (int i = 0;i < size;i++) {
+                if (list.get(i).equals(setScore)) {
+                    count++;
+                }
+            }
+        }
+        System.out.println(count);
+
+    }
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//编写一个函数，将两个数字相加，不得使用+或者其他数字运算符
+//给定两个int A 和 B,返回A+B的值
+//测试样例 1,2   返回 3
+
+/*
+           分析：这又是一道考察发散思维的很有意思的题目。当我们习以为常的东西被限制使用的时候，如何突破常规去思考，就是解决这个问题的关键所在。
+        看到的这个题目，首先我们可以分析人们是如何做十进制的加法的，比如是如何得出5+17=22这个结果的。
+        实际上，我们可以分成三步的：
+        第一步只做各位相加不进位，此时相加的结果是12（个位数5和7相加不要进位是2，十位数0和1相加结果是1）；
+        第二步做进位，5+7中有进位，进位的值是10；第三步把前面两个结果加起来，12+10的结果是22，刚好5+17=22。
+        对数字做运算，除了四则运算之外，也就只剩下位运算了。位运算是针对二进制的，我们也就以二进制再来分析一下前面的三步走策略对二进制是不是也管用。
+
+        5的二进制是101，17的二进制10001。还是试着把计算分成三步：
+        第一步各位相加但不计进位，得到的结果是10100（最后一位两个数都是1，相加的结果是二进制的10。这一步不计进位，因此结果仍然是0）；
+        第二步记下进位。在这个例子中只在最后一位相加时产生一个进位，结果是二进制的10；
+        第三步把前两步的结果相加，得到的结果是10110，正好是22。由此可见三步走的策略对二进制也是管用的。
+
+        接下来我们试着把二进制上的加法用位运算来替代。
+        第一步不考虑进位，对每一位相加。0加0与 1加1的结果都0，0加1与1加0的结果都是1。我们可以注意到，这和异或的结果是一样的。
+        接着考虑第二步进位，对0加0、0加1、1加0而言，都不会产生进位，只有1加1时，会向前产生一个进位。此时我们可以想象成是两个数先做位与运算，然后再向左移动一位。只有两个数都是1的时候，位与得到的结果是1，其余都是0。
+        第三步把前两个步骤的结果相加。如果我们定义一个函数Add（），第三步就相当于输入前两步骤的结果来递归调用自己。
+ */
+public class Main {
+    public static void main(String[] args) {
+        int i = 20;
+        int j = 98;
+        int ret = addAB(i, j);
+        System.out.println(ret);
+    }
+
+    static int sum = 0;
+    static int tmp = 0;
+
+    public static int addAB(int A, int B) {
+
+        if (B == 0) {
+            return A;
+        } else {
+            //第一步，相加不进位
+            sum = A ^ B;
+            //第二步，求得进位的值
+            tmp = (A & B) << 1;
+            //第三步，sum和tmp相加
+            return addAB(sum, tmp);
+        }
+    }
+
+
+    //非递归版：
+
+    /*
+     *两个数异或：相当于每一位相加，而不考虑进位；
+     *两个数相与，并左移一位：相当于求得进位；
+     *将两个新得到的数进行add操作，得到的结果和原本两个数相加相同，
+     *这样会把num2变得越来越小，知道为0是，则两个数的和直接就变成num1.
+     */
+
+    int Add(int num1, int num2) {
+        while (num2 != 0) {
+            int temp = num1 ^ num2;
+            num2 = (num1 & num2) << 1;
+            num1 = temp;
+        }
+        return num1;
+
+    }
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+    验证尼科彻斯定理，即：任何一个整数m的立方都可以写成m个连续奇数之和。
+    例如：
+    1^3=1
+    2^3=3+5
+    3^3=7+9+11
+    4^3=13+15+17+19
+    输入描述:
+    输入一个int整数
+    输出描述:
+    输出分解后的string
+ */
+
+public class Main2 {
+
+    //思路1：每一行第一个数都为 n*n-n+1
+
+    public static void main1(String[] args) {
+
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int num[] = new int[n];
+        int i = n * n - n + 1;
+        num[0] = i;
+        System.out.println(Arrays.toString(num));//n=6时：[31, 0, 0, 0, 0, 0]
+        for (int j = 1; j < n; j++) {
+            i += 2;
+            num[j] = i;
+        }
+        System.out.println(Arrays.toString(num));//n=6时：[31, 33, 35, 37, 39, 41]
+        StringBuffer sb = new StringBuffer();
+        for (int j = 0; j < n - 1; j++) {
+            sb.append(num[j]);
+            sb.append("+");
+        }
+        sb.append(num[n - 1]);
+        System.out.println(sb.toString());//n=6时：31+33+35+37+39+41
+    }
+
+    //方法2：
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            int n = scanner.nextInt();
+            StringBuffer sb = new StringBuffer();
+            int mid = n * n;
+            if (mid % 2 == 1) {
+                int count = (n - 1) / 2;
+                for (int i = count; i >= 0; i--) {
+                    sb.append(mid - i * 2);
+                    sb.append("+");
+                }
+                for (int i = 1; i < count; i++) {
+                    sb.append(mid + i * 2);
+                    sb.append("+");
+                }
+                sb.append(mid + count * 2);
+            }
+            else {
+                int count = n / 2;
+                for (int i = count - 1; i >= 0; i--) {
+                    sb.append(mid - i * 2 - 1);
+                    sb.append("+");
+                }
+                for (int i = 0; i < count - 1; i++) {
+                    sb.append(mid + i * 2 + 1);
+                    sb.append("+");
+                }
+                sb.append(mid + (count - 1) * 2 + 1);
+            }
+            System.out.println(String.valueOf(sb));
+        }
+    }
+}
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+           给定数字0-9各若干个。你可以以任意顺序排列这些数字，但必须全部使用。
+        目标是使得最后得到的数尽可能小（注意0不能做首位）。
+
+        例如：给定两个0，两个1，三个5，一个8，我们得到的最小的数就是10015558。
+
+        现给定数字，请编写程序输出能够组成的最小的数。
+        输入描述:
+        每个输入包含1个测试用例。每个测试用例在一行中给出10个非负整数，
+        顺序表示我们拥有数字0、数字1、……数字9的个数。整数间用一个空
+        格分隔。10个数字的总个数不超过50，且至少拥有1个非0的数字。
+
+        输出描述:
+        在一行中输出能够组成的最小的数。
+
+        输入：2200030010：即两个0，两个1，三个5，一个8，我们得到的最小的数就是10015558
+        输出：10015558
+ */
+
+
+//思路 ：找到所给数字中非零并且最小的数，让它为数字最高位，，
+//然后将剩余元素从小到大依次添加
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        while (in.hasNextInt()) {
+            //用数组存，数组内元素值代表数字0-9的个数
+            int[] nums = new int[10];
+            for(int i = 0;i<10;i++){
+                nums[i] = in.nextInt();
+            }
+            System.out.println(GetNum(nums));
+        }
+    }
+        public static String GetNum( int[] nums) {
+            //找到所给数字中非零并且最小的数，让它为数字最高位
+            //因为是顺序表示我们拥有数字0、数字1、……数字9的个数，所以数组中下标1代表的就是数字1的个数，
+            // 从1开始找，找到直接break并且数组i下标减一
+            String s = "";
+            for(int i = 1; i<10;i++){
+                if(nums[i] != 0){
+                    s += i;
+                    nums[i] --;
+                    break;
+                }
+            }
+            //找到最小值放在最高位后，然后将剩余元素从小到大依次添加，外层循环代表数字0-9，内层循环数字0-9分别的个数
+            for(int i = 0;i<10;i++){
+                while(nums[i] != 0){
+                    s += i;
+                    nums[i] --;
+                }
+            }
+            return s;
+        }
+}
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+        请设计一个算法完成两个超长正整数的加法。
+        输入参数：
+        String addend：加数
+        String augend：被加数
+        返回值：加法结果
+               public String AddLongInteger(String addend, String augend)
+                {
+                /在这里实现功能/
+                return null;
+                }
+                输入描述:
+                输入两个字符串数字
+                123456789123456789 123456789123456789
+
+                输出描述:
+                246913578246913578
+                输出相加后的结果，string型
+
+ */
+
+public class Code2 {
+
+    //法一：
+    //Java语言处理该问题，优势比较大，参考BigInteger类就可以处理。核心API考察，
+    //如果API限制，可以考虑采用字符串解析处理。
+    public static void main1(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String addend = in.nextLine();
+        String augend = in.nextLine();
+        BigInteger a = new BigInteger(addend);
+        BigInteger b = new BigInteger(augend);
+        System.out.println(a.add(b));
+    }
+
+
+    //法二：
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String addend = in.nextLine();
+        String augend = in.nextLine();
+        String s = add(addend,augend);
+        System.out.println(s);
+    }
+
+    private static String add(String addend, String augend) {
+        int len1 = addend.length();
+        int len2 = augend.length();
+        int[] a = new int[1000];
+        int[] b = new int[1000];
+        //因为两个数相加字符串后面的位数小，应该先加，所以讲字符串逆序存入数组
+        //将字符串1的字符逆序取出减去0字符就是该字符对应的数字，存入a数组
+        for (int i = 0;i < len1;i++) {
+            a[i] = addend.charAt(len1-1-i)-'0';
+        }
+        //将字符串1的字符逆序取出减去0字符就是该字符对应的数字，存入a数组
+        for (int i = 0; i < len2;i++) {
+            b[i] = addend.charAt(len2-1-i)-'0';
+        }
+
+        //取串1和串2长度的最大值，将两个字符串各位上的字符相加，和超过十的向前进一位，本位存取余10的值
+        int len = Math.max(len1,len2);
+        for (int i =0; i<len;i++) {
+            a[i] = a[i] + b[i];
+            if (a[i]>=10) {
+                a[i] = a[i]%10;
+                a[i+1] = a[i+1]+1;
+            }
+        }
+
+        //如果a[len]>0,说明第len位进了一位，字符串长度变成了len+1，应该拼接上len+1位的数
+        StringBuffer sb = new StringBuffer();
+        if (a[len] > 0) {
+            sb.append(a[len]);
+        }
+        //此时在将得到的数逆序存入sb，即得到相加的结果
+        for (int i = len-1;i>=0;i--) {
+            sb.append(a[i]);
+        }
+
+        return sb.toString();
+
+
+    }
+
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+   题目描述
+        美国总统奥巴马不仅呼吁所有人都学习编程，甚至以身作则编写代码，成为美国历史上首位编写计算机代码的总统。
+        2014年底，为庆祝“计算机科学教育周”正式启动，奥巴马编写了很简单的计算机代码：在屏幕上画一个正方形。现在你也跟他一起画吧！
+
+        输入
+        多组输入，每组数据一行，每行给出正方形边长N（3<=N<=20）和组成正方形边的某种字符C，间隔一个空格。
+
+        输出
+        输出由给定字符C画出的正方形。但是注意到行间距比列间距大，所以为了让结果看上去更像正方形，我们输出的行数实际上是列数的50%（四舍五入取整）。
+        每组数据后空一行
+
+        样例输入
+        10 a
+        样例输出
+         aaaaaaaaaa
+         a        a
+         a        a
+         a        a
+         aaaaaaaaaa
+ */
+public class Main {
+    //方法一：
+    //每种方法的输入输出是一样的，然后这种方法需要分输入的是奇数还是偶数。若偶数要输出行数为列数的一半；
+    //而若输入的是奇数，那么由于50%并且四舍五入，所以行数永远是列数的一半抹去小数加一，即int类型的除法
+    public static void main1(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n;
+        while(sc.hasNext()) {
+            n = sc.nextInt();
+            String str = sc.next();
+            char c = str.charAt(0);
+            //输入为偶数的情况下
+            if(n%2==0) {
+                //行数
+                for(int i=0;i<n/2;i++) {
+                    //如果是第一行或者最后一行，要打印n个字符
+                    if(i==0||i==n/2-1) {
+                        for(int j=0;j<n;j++)
+                            System.out.print(c);
+                     //如果不是第一行或者最后一行，第一列和最后一列输出字符，中间全部是空格
+                    }else {
+                        for(int j=0;j<n;j++) {
+                            if(j==0||j==n-1)
+                                System.out.print(c);
+                            else
+                                System.out.print(" ");
+                        }
+                    }
+                    //每行打印完了要换到下一行
+                    System.out.println();
+                }
+
+             //输入为奇数的情况下
+            }else {
+                for(int i=0;i<n/2+1;i++) {
+                    if(i==0||i==n/2) {
+                        for(int j=0;j<n;j++)
+                            System.out.print(c);
+                    }else {
+                        for(int j=0;j<n;j++) {
+                            if(j==0||j==n-1)
+                                System.out.print(c);
+                            else
+                                System.out.print(" ");
+                        }
+                    }
+                    System.out.println();
+                }
+            }
+            System.out.println();
+        }
+        sc.close();
+    }
+
+    //方法2：
+    //这种方法由于四舍五入，按照int类型的计算，就不用区分奇偶数。
+    // 就可以直接得到行数，行数为列数n加1然后除以2，不用分类，减少代码长度。
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n;
+        while(sc.hasNext()) {
+            n = sc.nextInt();
+            //单个字符的输入好像不符合语法
+            //先定义字符串输入
+            //然后将第一个字符放入字符型数据拿到
+            String str = sc.next();
+            char c = str.charAt(0);
+            //表示输出行数
+            //例如 由于四舍五入，则偶数：n=10,行数就为11/2=5， 奇数：n=9时，行数为10/2=5
+            for(int i=0;i<(n+1)/2;i++) {
+                //第一行和最后一行输出
+                if(i==0||i==(n+1)/2-1) {
+                    for(int j=0;j<n;j++)
+                        System.out.print(c);
+                    //每行的换行
+                    System.out.println();
+                }
+                else {
+                    //中间行数的输出
+                    for(int j=0;j<n;j++) {
+                        if(j==0||j==n-1)
+                            System.out.print(c);
+                        else
+                            System.out.print(" ");
+                    }
+                    //每行的换行
+                    System.out.println();
+                }
+            }
+            //每组之间的换行
+            System.out.println();
+        }
+    }
+}
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
