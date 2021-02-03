@@ -1,6 +1,338 @@
 
 
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+链式A+B
+ */
+public class Main02 {
+    public ListNode plusAB(ListNode a, ListNode b) {
+         if (a==null) {
+             return b;
+         }
+         if (b==null) {
+             return a;
+         }
+         ListNode head = new ListNode(-1);
+         ListNode cur = head;
+         ListNode p1 = a;
+         ListNode p2 = b;
+         int sum = 0;
+         while (p1 != null || p2 != null || sum!=0) {
+             if (p1!=null) {
+                 sum+=p1.val;
+                 p1 = p1.next;
+             }
+             if (p2!=null) {
+                 sum+=p2.val;
+                 p2 = p2.next;
+             }
+             cur.next = new ListNode(sum%10);
+             sum = sum/10;
+             cur = cur.next;
+         }
+         return head.next;
+    }
+}
+
+class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+最难的问题
+ */
+    public class Main02 {
+        public static void main(String[] args) {
+            Scanner scanner = new Scanner(System.in);
+            while (scanner.hasNext()) {
+                String s = scanner.nextLine();
+                char[] chars = s.toCharArray();
+                for (int i = 0;i < chars.length;i++) {
+                    if ('A' <= chars[i]) {
+                        chars[i] = (char) ('E' < chars[i] ? (chars[i]-5) : (chars[i]+21));
+                    }
+                }
+                System.out.println(new String(chars));
+            }
+        }
+    }
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+统计每个月兔子的总数
+ */
+public class Main01 {
+    public static void main1(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int month = Integer.parseInt(reader.readLine());
+        int totalCount = getTotalCount(month);
+        System.out.println(totalCount);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int month = sc.nextInt();
+            int totalCount = getTotalCount(month);
+            System.out.println(totalCount);
+        }
+
+
+    }
+    public static int getTotalCount(int monthCount) {
+        if (monthCount < 3){
+            return 1;
+        }else {
+           return getTotalCount(monthCount-1)+getTotalCount(monthCount-2);
+        }
+    }
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//合并两个有序链表
+public class Main2 {
+    public static void main(String[] args) {
+        ListNode listNode1 = new ListNode();
+        listNode1.addFirst(5);
+        listNode1.addFirst(6);
+        listNode1.addFirst(8);
+        listNode1.addFirst(1);
+        int x = 5;
+        listNode1.display();
+        Main2 main2 = new Main2();
+         main2.partition(listNode1.head,x);
+        System.out.println();
+        listNode1.display();
+    }
+    
+
+    public ListNode partition(ListNode pHead, int x) {
+        ListNode aHead = null;
+        ListNode aLast = null;
+        ListNode bHead = null;
+        ListNode bLast = null;
+        ListNode cur = pHead;
+        while (cur != null) {
+            if (cur.val < x ) {
+                if (aHead == null) {
+                    aHead = cur;
+                    aLast = cur;
+                }else {
+                    aLast.next = cur;
+                    aLast = aLast.next;
+                }
+            }else {
+                if (bHead == null) {
+                    bHead = cur;
+                    bLast = cur;
+                }else {
+                    bLast.next = cur;
+                    bLast = bLast.next;
+                }
+            }
+            cur = cur.next;
+        }
+        if (aHead == null) {
+            return bHead;
+        }else if (bHead == null) {
+            return aHead;
+        }else {
+            aLast.next = bHead;
+            bLast.next = null;
+        }
+        return aHead;
+    }
+}
+
+class ListNode {
+    int val;
+    ListNode next = null;
+    ListNode head = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+    ListNode() {
+
+    }
+
+    public void addFirst(int val) {
+        ListNode listNode = new ListNode(val);
+        if (head == null) {
+            this.head = listNode;
+        }else {
+            listNode.next = this.head;
+            this.head = listNode;
+        }
+    }
+    public void display() {
+        ListNode cur = this.head;
+        while (cur !=null) {
+            System.out.print(cur.val + " ");
+            cur = cur.next;
+        }
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+public class Main1 {
+    public static void main(String[] args) {
+        int[] arr = {1,2,3,2,2,3};
+        int n = 6;
+        Main1 main1 = new Main1();
+        int ret = main1.getValue(arr,n);
+        System.out.println(ret);
+    }
+    public int getValue(int[] gifts, int n) {
+        int maxCount = 0;
+        int max = 0;
+        for (int i = 0;i < gifts.length;i++) {
+            int k = gifts[i];
+            int count = 0;
+            for (int j = 0;j < gifts.length;j++) {
+                if (gifts[j] == k) {
+                    count++;
+                }
+            }
+            if (count > maxCount) {
+                maxCount = count;
+                max = gifts[i];
+            }
+        }
+        if (maxCount > (n/2)) {
+            return max;
+        }else {
+            return 0;
+        }
+    }
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+题目：输入任意（用户，成绩）序列，可以获得成绩从高到低或从低到高的排列,相同成绩
+都按先录入排列在前的规则处理。
+
+示例：
+jack      70
+peter     96
+Tom       70
+smith     67
+
+从高到低  成绩
+peter     96
+jack      70
+Tom       70
+smith     67
+
+从低到高
+smith     67
+jack      70
+Tom      70
+peter     96
+
+
+输入描述:
+输入多行，先输入要排序的人的个数，然后输入排序方法0（降序）或者1（升序）
+        再分别输入他们的名字和成绩，以一个空格隔开。
+输出描述:
+按照指定方式输出名字和成绩，名字和成绩之间以一个空格隔开
+
+解题思路：
+    定义类，表示姓名和成绩实现方法中：
+    先输入人数，再输入排序策略（0或者1），
+    输入多组人名和成绩按照排序策略进行排序输出
+ */
+
+//重写Comparable接口的compareTo方法
+public class Main2 {
+    public static void main(String[] args) {
+
+        //TreeMap<String,Integer> treeMap = new TreeMap<>();
+        TreeSet<Student> treeSet = new TreeSet<>();
+        Student student = new Student("张",100);
+        Student student2 = new Student("李",50);
+        Student student3 = new Student("赵",70);
+        treeSet.add(student);
+        treeSet.add(student2);
+        treeSet.add(student3);
+       /* List<Student> list = new ArrayList<>();
+        list.add(student);
+        list.add(student2);
+        list.add(student3);*/
+        for (Student student1 : treeSet) {
+            System.out.println(student1);
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+
+给定一个string数组p及其大小n，同时给定长字符串string s，请返回一个bool数组，
+元素为true或false对应p中的对应字符串是否为s的子串。要求p中的串长度小于等于8，
+且p中的串的个数小于等于500，同时要求s的长度小于等于1000。
+
+输入：["a","b","c","d"],4,"abc"
+输出：[true,true,true,false]
+ */
+public class Main1 {
+    public static void main(String[] args) {
+        String[] p = {"a","b","c","d"};
+        int n = 4;
+        String s = "abc";
+        System.out.println(s.contains("bc"));
+        /*System.out.println(s.substring(0,s.length()-1));
+        System.out.println(s.subSequence(0,s.length()));
+        System.out.println(s.subSequence(0,s.length()-1).equals(p[1]));
+        System.out.println(s.subSequence(0,s.length()-1).equals(p[0]));
+        System.out.println(s.subSequence(0,s.length()-1).equals(p[2]));
+        System.out.println(s.subSequence(0,s.length()-1).equals(p[3]));*/
+        Main1 main1 = new Main1();
+        boolean[] ret  = main1.chkSubStr(p,n,s);
+        System.out.println(Arrays.toString(ret));
+
+    }
+    public boolean[] chkSubStr(String[] p, int n, String s) {
+        boolean[] ret = new boolean[p.length];
+        for (int i = 0;i < n;i++) {
+            ret[i] = s.contains(p[i]);
+        }
+        return ret;
+    }
+}
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
