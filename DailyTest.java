@@ -2,6 +2,375 @@
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+记票统计
+ */
+public class Main02 {
+    public static void main(String[] args) {
+        Map<Character,Integer> map = new HashMap<Character,Integer>();
+        Scanner scanner = new Scanner(System.in);
+        //int votePerson = Integer.parseInt(scanner.nextLine());
+        while (scanner.hasNext()) {
+            //候选人人数
+            int votePerson = scanner.nextInt();
+            scanner.nextLine();
+            //候选人名字
+            char[] chars1 = scanner.nextLine().toCharArray();
+            //投票人人数
+            int candidatePerson = scanner.nextInt();
+            scanner.nextLine();
+            //投票人投的票
+            char[] chars2 = scanner.nextLine().toCharArray();
+
+            //将候选人名字放入map,i=i+2,因为每两个候选人名字中间有空格字符
+            for (int i = 0;i < chars1.length;i=i+2) {
+                map.put(chars1[i],0);
+            }
+
+            int Invalid = 0;
+
+            //读取投票人的投票
+            for (int i = 0;i < chars2.length;i=i+2) {
+                if (map.containsKey(chars2[i])) {
+                    map.put(chars2[i],map.get(chars2[i])+1);
+                }else {
+                    Invalid++;
+                }
+            }
+            //输出
+            for (Map.Entry<Character,Integer> me : map.entrySet()) {
+                System.out.println(me.getKey()+" : "+me.getValue());
+            }
+            System.out.println("Invalid : "+Invalid);
+        }
+
+    }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+数字之和
+ */
+public class Main {
+
+  /*  public static void main(String[] args) {
+        String s = "123";
+        String[] strings = s.split("");
+        System.out.println(strings.length);
+        System.out.println(Arrays.toString(strings));
+        char c = 'a';
+        System.out.println(s.charAt(0));
+    }*/
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            long n = Integer.parseInt(sc.nextLine());
+            int ret1 = count(n);
+            long n2 = n*n;
+            int ret2 = count(n2);
+            System.out.println(ret1+" "+ret2);
+        }
+    }
+
+    //计算n的各位数字之和
+    public static int count(long n) {
+        String s = String.valueOf(n);
+        int sum = 0;
+        String[] strings = s.split("");
+        for (int i = 0;i < strings.length;i++) {
+            sum += Integer.parseInt(strings[i]);
+        }
+        return sum;
+    }
+
+
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+学分绩点
+
+输入：
+5
+4 3 4 2 3
+91 88 72 69 56
+
+输出：
+2.52
+ */
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = Integer.parseInt(sc.nextLine());
+        String[] strings1 = sc.nextLine().split(" ");
+        String[] strings2 = sc.nextLine().split(" ");
+        //所有课程学分之和
+        double scoreSum = 0;
+        //所有学科绩点之和
+        double scorePointSum = 0;
+        for (int i = 0;i < n;i++) {
+            scoreSum += Integer.parseInt(strings1[i]);
+            scorePointSum += scorePoint(Integer.parseInt(strings2[i])) * Integer.parseInt(strings1[i]);
+        }
+        double ret = scorePointSum/scoreSum;
+        System.out.println(String.format("%.2f",ret));
+    }
+
+    public static double scorePoint(int i) {
+        if (i>=90 && i<=100) {
+            return 4.0;
+        }else if (i>=85 && i<=89) {
+            return 3.7;
+        }else if (i>=82 && i<=84) {
+            return 3.3;
+        }else if (i>=78 && i<=81) {
+            return 3.0;
+        }else if (i>=75 && i<=77) {
+            return 2.7;
+        }else if (i>=72 && i<=74) {
+            return 2.3;
+        }else if (i>=68 && i<=71) {
+            return 2.0;
+        }else if (i>=64 && i<=67) {
+            return 1.5;
+        }else if (i>=60 && i<=63) {
+            return 1.0;
+        }
+        return 0;
+    }
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+最高分是多少
+
+输入：
+5 7
+1 2 3 4 5
+Q 1 5
+U 3 6
+Q 3 4
+Q 4 5
+U 4 5
+U 2 9
+Q 1 5
+
+输出：
+5
+6
+5
+9
+
+ */
+public class Main2 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            String[] strings = scanner.nextLine().split(" ");
+            int N = Integer.parseInt(strings[0]);
+            int M = Integer.parseInt(strings[1]);
+            String[] strings2 = scanner.nextLine().split(" ");
+            int[] ints = new int[N];
+            for (int i = 0;i < N;i++) {
+                ints[i] = Integer.parseInt(strings2[i]);
+            }
+            List<Integer> list = new ArrayList<>();
+
+            for (int i = 0;i < M;i++) {
+                String[] strings1 = scanner.nextLine().split(" ");
+                if (strings1[0].charAt(0)=='Q') {
+                    int index1 = Integer.parseInt(strings1[1]);
+                    int index2 = Integer.parseInt(strings1[2]);
+                    Arrays.sort(ints,index1-1,index2-1);
+                    //query(ints,index1-1,index2-1);
+                    list.add(ints[index2-1]);
+                }else if (strings1[0].charAt(0)=='U') {
+                    int index = Integer.parseInt(strings1[1]);
+                    int num = Integer.parseInt(strings1[2]);
+                    ints[index] = num;
+                    if (i==M-2) {
+                        Arrays.sort(ints);
+                    }
+                }
+            }
+            for (int i : list) {
+                System.out.println(i);
+            }
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+小易的升级之路
+ */
+public class Main1 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            String[] strings1 = sc.nextLine().split(" ");
+            int n = Integer.parseInt(strings1[0]);
+            int init = Integer.parseInt(strings1[1]);
+            String[] strings2 = sc.nextLine().split(" ");
+            for (int i = 0;i < n;i++) {
+                int e = Integer.parseInt(strings2[i]);
+                if (e <= init) {
+                    init+=e;
+                }
+                if (e > init) {
+                    //求最大公约数
+                    int temp = init;
+                    while (temp>1) {
+                        //找到两个数最小值，如果能同时被两个数整除，这个即为最大公约数
+                        if (init%temp==0 && e%temp==0) {
+                            init+=temp;
+                            break;
+                        }
+                        //如果不能，往下递减，直到找到为止
+                        temp--;
+                    }
+                }
+            }
+            System.out.println(init);
+        }
+    }
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+数字分类
+ */
+public class Main02 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String[] strings = sc.nextLine().split(" ");
+        int n = Integer.parseInt(strings[0]);
+        int sum1 = 0;
+        List<Integer> A2 = new ArrayList<>();
+        int sum2 = 0;
+        List<Integer> A3 = new ArrayList<>();
+        List<Integer> A4 = new ArrayList<>();
+        double sum4 = 0;
+        List<Integer> A5 = new ArrayList<>();
+        List<Object> list = new ArrayList<>();
+        for (int i = 1;i < n;i++){
+            int e = Integer.parseInt(strings[i]);
+            if (e%5==0 && e%2==0) {
+                sum1+=e;
+
+            }else if (e%5==1) {
+                A2.add(e);
+                if (A2.size()%2!=0) {
+                    sum2+=e;
+                }else {
+                    sum2-=e;
+                }
+
+            }else if (e%5==2) {
+                A3.add(e);
+
+            }else if (e%5==3) {
+                A4.add(e);
+                sum4+=e;
+            }else if (e%5==4) {
+                A5.add(e);
+            }
+        }
+        list.add(0,sum1);
+        list.add(1,sum2);
+        list.add(2,A3.size());
+        double avg4 = sum4/A4.size();
+        Collections.sort(A5);
+        list.add(3,avg4);
+        list.add(4,A5.get(A5.size()-1));
+        for (int i = 0;i < 3;i++) {
+            System.out.print(list.get(i)+" ");
+        }
+        System.out.print(String.format("%.1f",list.get(3))+" ");
+        System.out.print(list.get(4));
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+平衡二叉树
+
+现一个函数，检查二叉树是否平衡，平衡二叉树的定义如下，对于树中的任意 一个结点，
+其两颗子树的高度差不超过1。
+给定指向树根结点的指针TreeNode* root，请返回一个bool，代表这棵树是否平衡。
+ */
+public class Main01 {
+    public static void main(String[] args) {
+
+    }
+    //判断是不是平衡二叉树
+    public boolean isBalance(TreeNode root) {
+        if (root==null) {
+            return true;
+        }
+        //左子树高度
+        int left = getHeight(root.left);
+        //右子树高度
+        int right = getHeight(root.right);
+        //如果左右子树高度相差<=1，说明为平衡树，接着判断左右子树是否为平衡树
+        if (Math.abs(left-right) <= 1) {
+            return isBalance(root.left) && isBalance(root.right);
+        }else {
+            //若左右子树高度相差>1,或者左右子树的高度相差>1，说明不是平衡树
+            return false;
+        }
+
+    }
+
+    //计算二叉树的高度
+    private int getHeight(TreeNode root) {
+        if (root==null) {
+            return 0;
+        }
+        //计算左子树的高度
+        int leftHeight = getHeight(root.left);
+        //计算右子树的高度
+        int rightHeight = getHeight(root.right);
+        return Math.max(leftHeight,rightHeight)+1;
+    }
+}
+class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
