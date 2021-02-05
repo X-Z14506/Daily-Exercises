@@ -2,6 +2,376 @@
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+简单错误记录
+
+思路：此题中，对于两个文件，如果文件名相同（不用管目录，只看最后的文件名），行号相同，就认为使用一个文件
+     如果输入的文件中，有这样相同的文件，就在出现的次数那里加一，如果输入的文件之前没有输入过，则添加新文件
+
+     首先，先定义一个类，用来表示错误信息，其中包括文件名，行号，次数，具体结构
+ */
+
+public class Main2 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        List<ErrorFile> list = new ArrayList<>();
+        while (sc.hasNext()) {
+            ErrorFile errorFile = new ErrorFile();
+            String[] lines = sc.nextLine().split(" ");//将输入的每一行按空格拆分，0号下标存储的文件路径/文件名，1号下标存储的是行号
+            String name = lines[0];//取得文件名
+            int index = name.lastIndexOf('\\');//扎到最后一个\的下标位置，从而获取文件名
+            errorFile.fileName = index<0 ? name : name.substring(index+1);//获取文件名,如果index<0，说明name中没有\，则name就是文件名，否则文件名是name的子串
+            errorFile.lineNum = Integer.parseInt(lines[1]);//获取行号
+
+            boolean flag = true;//设置一个标志位
+
+            //遍历list，如果文件名和行号都相同的话，count加一次，flag置为false
+            for (ErrorFile ef : list) {
+                if (ef.fileName.equals(errorFile.fileName) && ef.lineNum == errorFile.lineNum) {
+                    errorFile.count++;
+                    flag = false;
+                }
+            }
+            //如果flag还是true，说明list中没有这个错误信息，则将该错误信息添加到list内
+            if (flag) {
+                list.add(errorFile);
+            }
+        }
+        sc.close();//输入结束之后，关闭
+        //传入一个比较器，对其进行排序
+        Collections.sort(list, new Comparator<ErrorFile>() {
+            @Override
+            public int compare(ErrorFile o1, ErrorFile o2) {
+                //return (o1.count-o2.count)*(-1); //降序输出，所以乘-1
+                return (o2.count-o1.count);
+            }
+        });
+
+        //遍历排好序的list，如果错误信息不够八个，全部输出，如果超出八个，输出前八个
+        for (int i = 0;i < (list.size()>8 ? 8 : list.size());i++) {
+            ErrorFile er = list.get(i);//获取错误信息
+            String name = er.fileName;//获取文件名
+            String fileName = name.length()>16 ? name.substring(name.length()-16) : name;//如果文件名大于16输出后16为，如果小于等于16，全部输出
+            int lineNum = er.lineNum;//获取行号
+            int count = er.count; //获取错误信息出现次数
+            System.out.println(name+" "+lineNum+" "+count);
+        }
+
+    }
+}
+
+//定义一个类，来描述错误文件的信息
+class  ErrorFile {
+    //文件名
+    String fileName;
+    //行号
+    int lineNum;
+    //一个错误出现的次数计数 ：次数默认是1，因为一旦输入一个文件，他就出现了一次，当有重复文件出现的时候，给次数加1
+    int count = 1;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+说反话
+ */
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String[] s = sc.nextLine().split(" ");
+        reverse(s);
+    }
+    public static void reverse(String[] strings) {
+        List<String> list = new ArrayList<String>();
+        for (int i = 0;i < strings.length;i++) {
+            list.add(strings[i]);
+        }
+
+        int e = list.size()-1;
+        int b = 0;
+        for (int i = e;i >= 0;i--) {
+            strings[b++] = list.get(i);
+        }
+
+        for (String s : strings) {
+            System.out.print(s+" ");
+        }
+
+    }
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+大整数排序 TODO ：IDEA可以跑，牛客不通过
+ */
+public class Main2 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        List<String> list = new ArrayList<>();
+        while (sc.hasNext()) {
+            int n = sc.nextInt();
+            sc.nextLine();
+            for (int i = 0;i < n;i++) {
+                String s = sc.nextLine();
+                list.add(s);
+            }
+            //对list内容进行大小排序
+            sort(list);
+            //输出list
+            for (String s : list) {
+                System.out.println(s);
+            }
+        }
+    }
+
+    public static void sort(List<String> list) {
+        for (int i = 0;i < list.size()-1;i++) {
+            String s1 = list.get(i);
+            for (int j = i+1;j < list.size();j++) {
+                String s2 = list.get(j);
+                if (s1.length()>s2.length()) {
+                    //交换list的i下标和j下标的内容
+                    swap(list,i,j);
+                }else if (s1.length()==s2.length()) {
+                    for (int k = 0;k < s1.length();k++) {
+                        if (s1.charAt(k) > s2.charAt(k)) {
+                            swap(list,i,j);
+                        }
+                    }
+                }
+            }
+        }
+        //System.out.println(list);
+    }
+
+    public static List<String> swap(List<String> list,int i,int j) {
+        String s1 = list.get(i);
+        String s2 = list.get(j);
+        String temp = s1;
+        list.set(i,s2);
+        list.set(j,temp);
+        return list;
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+密码验证合格程序
+ */
+
+public class Main2 {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            String s = sc.nextLine();
+            boolean ret = CodeIsOk(s);
+            if (ret) {
+                System.out.println("OK");
+            }else {
+                System.out.println("NG");
+            }
+        }
+    }
+
+    //判断密码是否合格
+    public static boolean CodeIsOk(String s) {
+        boolean b = true;
+        //先判断长度
+        if (s.length() <= 8) {
+            b = false;
+            return b;
+        }
+        //在判断符号数
+        boolean b1 = CodeIsOk2(s);
+        if (!b1) {
+            b = false;
+            return b;
+        }
+        //最后判断不能有相同长度超过2的子串重复
+        boolean b2 = CodeIsOk3(s);
+        if (!b2) {
+            b = false;
+            return b;
+        }
+        return b;
+    }
+
+    //判断是否存在三种以上的符号
+    public static boolean CodeIsOk2(String s) {
+        int len = s.length();
+        int[] ints = new int[4];
+        for (int i = 0;i < len;i++) {
+            char c = s.charAt(i);
+            if (c>='0' && c<='9') {
+                ints[0]++;
+            }else if (c>='a' && c<='z') {
+                ints[1]++;
+            }else if (c>='A' && c<='Z') {
+                ints[2]++;
+            }else {
+                ints[3]++;
+            }
+        }
+        int count = 0;
+        for (int i : ints) {
+            if (i == 0){
+                count++;
+            }
+        }
+        return count <= 1;
+    }
+
+    //不能有相同长度超过2的子串重复，最小的为长度为3的重复子串，
+    // 若长度为4的重复子串，则长度为3的子串也包含在里面，所以只需要找长度为3的子串即可
+    private static boolean CodeIsOk3(String s) {
+        //遍历整个密码串
+        for (int i = 0;i < s.length()-3;i++) {
+            //从前向后找子串
+            String s1 = s.substring(i,i+3);
+            String otherString = s.substring(i+3,s.length()-1);
+            if (otherString.contains(s1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+守形数
+ */
+public class Main1 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            String s = sc.nextLine();
+            int len = s.length();
+            int n = Integer.parseInt(s);
+            int n2 = n*n;
+            String s1 = String.valueOf(n2);
+            String ret = "";
+            for (int i=s1.length()-len;i < s1.length();i++) {
+                ret = ret + s1.charAt(i);
+            }
+            //System.out.println(ret);
+            if (s.equals(ret)) {
+                System.out.println("YES!");
+            }else {
+                System.out.println("NO!");
+            }
+        }
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+整数与IP地址间的转换
+ */
+    //TODO 存在数组越界问题待解决
+public class Main2 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            String s = sc.nextLine();
+            //输入的是IP地址
+            if (s.contains(".")) {
+                IPToInt(s);
+            }else {//输入的是整数
+                IntToIP(s);
+            }
+       }
+    }
+
+    public static void IPToInt(String s) {
+        String[] strings = s.split("\\.");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0;i < strings.length;i++) {
+            int e = Integer.parseInt(strings[i]);
+            String str = Integer.toBinaryString(e);
+            //所有二进制补全成八位
+            while (str.length() < 8) {
+                str="0"+str;
+            }
+            sb.append(str);
+        }
+        System.out.println(Integer.parseInt(sb.toString(),2));
+    }
+
+    public static void IntToIP(String s) {
+        //1.先将十进制转换为二进制
+        String s1 = Integer.toBinaryString(Integer.parseInt(s));
+        //2.补0
+        while (s1.length() < 32) {
+            s1="0"+s1;
+        }
+        //3.存进数组
+        String[] strings = new String[4];
+        int [] ints = new int[4];
+        int count = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0;i < 4;i++) {
+            strings[i] = s1.substring(count,count+8);
+            ints[i] = Integer.parseInt(strings[i],2);
+            sb.append(ints[i]+".");
+            count+=8;
+        }
+        sb.deleteCharAt(sb.length()-1);
+        System.out.println(sb);
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+找x
+ */
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        sc.nextLine();
+        String[] strings = sc.nextLine().split(" ");
+        int x = Integer.parseInt(sc.nextLine());
+        for (int i =0;i < strings.length;i++) {
+            int e = Integer.parseInt(strings[i]);
+            if (e == x) {
+                System.out.println(i);
+                return;
+            }
+        }
+        System.out.println(-1);
+    }
+}
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
