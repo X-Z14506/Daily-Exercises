@@ -1,4 +1,4 @@
-public class 斐波那切数列 {
+public class 斐波那切数列  {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         while (sc.hasNext()) {
