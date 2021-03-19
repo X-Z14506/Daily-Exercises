@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class 从尾到头打印链表 {
+public class 从尾到头打印链表  {
     public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
         //先按顺序压栈
         Stack<Integer> stack = new Stack<>();
